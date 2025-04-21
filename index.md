@@ -1,35 +1,54 @@
 ---
-title: Home
+title: Implementação de Dashboards e Geocodificação na Plataforma CulturaEduca
 layout: home
+nav_order: 1
 ---
 
-This is a *bare-minimum* template to create a Jekyll site that uses the [Just the Docs] theme. You can easily set the created site to be published on [GitHub Pages] – the [README] file explains how to do that, along with other details.
+# Implementação de Dashboards e Desenvolvimento de Software Livre para Geocodificação Aplicados à Plataforma CulturaEduca
 
-If [Jekyll] is installed on your computer, you can also build and preview the created site *locally*. This lets you test changes before committing them, and avoids waiting for GitHub Pages.[^1] And you will be able to deploy your local build to a different platform than GitHub Pages.
+## Introdução e Problemática
 
-More specifically, the created site:
+A plataforma **CulturaEduca** tem como objetivo centralizar e disponibilizar informações educacionais e socioeconômicas para apoiar decisões locais e fortalecer ações comunitárias. Atualmente, a plataforma carece de dashboards interativos que facilitem a análise dos dados, bem como de uma solução própria e gratuita de geocodificação baseada no CNEFE, evitando a dependência de APIs externas.
 
-- uses a gem-based approach, i.e. uses a `Gemfile` and loads the `just-the-docs` gem
-- uses the [GitHub Pages / Actions workflow] to build and publish the site on GitHub Pages
+## Objetivo Geral
 
-Other than that, you're free to customize sites that you create with this template, however you like. You can easily change the versions of `just-the-docs` and Jekyll it uses, as well as adding further plugins.
+Desenvolver dashboards interativos e uma ferramenta de geocodificação de software livre integrada à plataforma CulturaEduca, melhorando a visualização e o uso dos dados.
 
-[Browse our documentation][Just the Docs] to learn more about how to use this theme.
+## Objetivos Específicos
 
-To get started with creating a site, simply:
+1. Levantar as necessidades dos usuários da CulturaEduca para orientar o desenvolvimento dos dashboards.
+2. Avaliar ferramentas livres como **Apache Superset** e **Grafana** para a criação das visualizações.
+3. Criar protótipos funcionais de dashboards integrados à plataforma.
+4. Analisar a ferramenta **GeocodeBR** e desenvolver melhorias ou uma nova versão em Python, baseada no **CNEFE**.
+5. Validar as ferramentas com usuários reais da plataforma.
 
-1. click "[use this template]" to create a GitHub repository
-2. go to Settings > Pages > Build and deployment > Source, and select GitHub Actions
+## Justificativa
 
-If you want to maintain your docs in the `docs` directory of an existing project repo, see [Hosting your docs from an existing project repo](https://github.com/just-the-docs/just-the-docs-template/blob/main/README.md#hosting-your-docs-from-an-existing-project-repo) in the template README.
+A clareza e acessibilidade dos dados geoespaciais são fundamentais para ações eficazes na educação e em políticas públicas. Este projeto visa melhorar a experiência dos usuários da CulturaEduca por meio de visualizações intuitivas e geocodificação eficiente e gratuita.
 
-----
+## Metodologia
 
-[^1]: [It can take up to 10 minutes for changes to your site to publish after you push the changes to GitHub](https://docs.github.com/en/pages/setting-up-a-github-pages-site-with-jekyll/creating-a-github-pages-site-with-jekyll#creating-your-site).
+- Análise de dados e implementação de dashboards na plataforma.
+- Comparação entre ferramentas de visualização open source.
+- Desenvolvimento com foco em tecnologias como **PostgreSQL/PostGIS** e **GeoServer**.
+- Estudo da performance do GeocodeBR e desenvolvimento em Python.
+- Testes com usuários finais para avaliar usabilidade e desempenho.
 
-[Just the Docs]: https://just-the-docs.github.io/just-the-docs/
-[GitHub Pages]: https://docs.github.com/en/pages
-[README]: https://github.com/just-the-docs/just-the-docs-template/blob/main/README.md
-[Jekyll]: https://jekyllrb.com
-[GitHub Pages / Actions workflow]: https://github.blog/changelog/2022-07-27-github-pages-custom-github-actions-workflows-beta/
-[use this template]: https://github.com/just-the-docs/just-the-docs-template/generate
+## Cronograma
+
+| Mês             | Atividades                                                                 |
+|------------------|---------------------------------------------------------------------------|
+| Abril - Maio     | Revisão bibliográfica e levantamento das necessidades                     |
+| Maio - Junho     | Escolha e prototipação dos dashboards                                     |
+| Junho - Agosto   | Avaliação e desenvolvimento da ferramenta de geocodificação               |
+| Setembro - Outubro | Integração dos dashboards e ferramenta à plataforma                    |
+| Outubro          | Testes com usuários e refinamento                                         |
+| Outubro - Novembro | Redação e finalização do TCC                                           |
+
+## Conclusão
+
+Este projeto busca ampliar a capacidade de análise e uso de dados da plataforma CulturaEduca, promovendo uma gestão mais inovadora, participativa e eficiente das informações educacionais e culturais.
+
+---
+
+> Acesse o [repositório no GitHub](https://github.com/seu-usuario/seu-repositorio) para mais detalhes técnicos sobre o projeto.
