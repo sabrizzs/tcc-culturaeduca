@@ -1,10 +1,10 @@
 ---
-title: Implementação de Dashboards e Geocodificação na Plataforma CulturaEduca
+title: Proposta
 layout: home
 nav_order: 1
 ---
 
-# Implementação de Dashboards e Desenvolvimento de Software Livre para Geocodificação Aplicados à Plataforma CulturaEduca
+# Implementação de dashboards e desenvolvimento de Software Livre para geocodificação pplicados à plataforma CulturaEduca
 
 ## Introdução e Problemática
 
