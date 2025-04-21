@@ -6,15 +6,15 @@ nav_order: 1
 
 # Implementação de dashboards e desenvolvimento de Software Livre para geocodificação pplicados à plataforma CulturaEduca
 
-## Introdução e Problemática
+## Introdução problemática
 
 A plataforma **CulturaEduca** tem como objetivo centralizar e disponibilizar informações educacionais e socioeconômicas para apoiar decisões locais e fortalecer ações comunitárias. Atualmente, a plataforma carece de dashboards interativos que facilitem a análise dos dados, bem como de uma solução própria e gratuita de geocodificação baseada no CNEFE, evitando a dependência de APIs externas.
 
-## Objetivo Geral
+## Objetivo geral
 
 Desenvolver dashboards interativos e uma ferramenta de geocodificação de software livre integrada à plataforma CulturaEduca, melhorando a visualização e o uso dos dados.
 
-## Objetivos Específicos
+## Objetivos específicos
 
 1. Levantar as necessidades dos usuários da CulturaEduca para orientar o desenvolvimento dos dashboards.
 2. Avaliar ferramentas livres como **Apache Superset** e **Grafana** para a criação das visualizações.
@@ -51,4 +51,4 @@ Este projeto busca ampliar a capacidade de análise e uso de dados da plataforma
 
 ---
 
-> Acesse o [repositório no GitHub](https://github.com/seu-usuario/seu-repositorio) para mais detalhes técnicos sobre o projeto.
+> Acesse o [repositório no GitHub](https://github.com/sabrizzs/tcc-culturaeduca) para mais detalhes técnicos sobre o projeto.
