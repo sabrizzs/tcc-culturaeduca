@@ -6,6 +6,16 @@ nav_order: 1
 
 # Implementação de dashboards e desenvolvimento de Software Livre para geocodificação pplicados à plataforma CulturaEduca
 
+### Orientadora
+
+Profa. Dra. Kelly Rosa Braghetto
+
+### Integrantes
+
+Sabrina Araújo da Silva, NUSP: 12566182
+
+Samantha Miyahira, NUSP: 11797261
+
 ## Introdução problemática
 
 A plataforma **CulturaEduca** tem como objetivo centralizar e disponibilizar informações educacionais e socioeconômicas para apoiar decisões locais e fortalecer ações comunitárias. Atualmente, a plataforma carece de dashboards interativos que facilitem a análise dos dados, bem como de uma solução própria e gratuita de geocodificação baseada no CNEFE, evitando a dependência de APIs externas.
