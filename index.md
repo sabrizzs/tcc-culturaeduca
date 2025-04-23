@@ -4,7 +4,7 @@ layout: home
 nav_order: 1
 ---
 
-# Implementação de dashboards e desenvolvimento de Software Livre para geocodificação pplicados à plataforma CulturaEduca
+# Implementação de dashboards e desenvolvimento de Software Livre para geocodificação aplicados à plataforma CulturaEduca
 
 ### Orientadora
 
