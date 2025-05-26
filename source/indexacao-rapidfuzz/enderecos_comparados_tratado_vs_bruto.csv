@@ -1,42 +1,42 @@
-idx_tratado;endereco_tratado;idx_bruto;endereco_bruto;similaridade;endereco_tratado_normalizado;endereco_bruto_normalizado
-0;av antonio piranga 614 centro;39597;avenida  antonio piranga 61 centro;98,50746268656717;avenida antonio piranga 614 centro;avenida  antonio piranga 61 centro
-1;avenida antonio piranga 700 centro;50282;avenida  antonio piranga 700 centro;100,0;avenida antonio piranga 700 centro;avenida  antonio piranga 700 centro
-2;av antonio piranga 614 centro;39597;avenida  antonio piranga 61 centro;98,50746268656717;avenida antonio piranga 614 centro;avenida  antonio piranga 61 centro
-3;rua dos cariris 195 piraporinha;3541;rua  dos cariris 195 piraporinha;100,0;rua dos cariris 195 piraporinha;rua  dos cariris 195 piraporinha
-4;rua moaciar goulart cunha caldas 111 centro;70850;rua  moacyr goulart cunha caldas 111 conceicao;86,36363636363636;rua moaciar goulart cunha caldas 111 centro;rua  moacyr goulart cunha caldas 111 conceicao
-5;praca rui barbosa 27 piraporinha;160130;praca  rui barbosa 27 piraporinha;100,0;praca rui barbosa 27 piraporinha;praca  rui barbosa 27 piraporinha
-6;av nossa senhora dos navegantes 288 eldorado;43091;avenida nossa senhora dos navegantes 289 eldorado;97,95918367346938;avenida nossa senhora dos navegantes 288 eldorado;avenida nossa senhora dos navegantes 289 eldorado
-7;rua capibaribe 193 jardim campanario;115200;rua  capibaribe 193 campanario;100,0;rua capibaribe 193 jardim campanario;rua  capibaribe 193 campanario
-8;av piraporinha 1682 piraporinha;30100;avenida  piraporinha 1682 piraporinha;100,0;avenida piraporinha 1682 piraporinha;avenida  piraporinha 1682 piraporinha
-9;rua jose bonifacio 1641 serraria;74232;rua  jose bonifacio 1641 serraria;100,0;rua jose bonifacio 1641 serraria;rua  jose bonifacio 1641 serraria
-10;rua tiradentes 100 centro;39595;rua  tiradentes 100 centro;100,0;rua tiradentes 100 centro;rua  tiradentes 100 centro
-11;rua mem de sa 280 jardim casa grande;172305;rua  mem de sa 280 casa grande;100,0;rua mem de sa 280 jardim casa grande;rua  mem de sa 280 casa grande
-12;avn sao jose 472 centro;89141;avenida sao jose 472 centro;100,0;avenida sao jose 472 centro;avenida sao jose 472 centro
-13;rua serra de maracuja 49 parque reid;69982;rua  serra de maracuja 49 centro;87,27272727272728;rua serra de maracuja 49 parque reid;rua  serra de maracuja 49 centro
-14;rua barao de iguape 98 vil sao jose;162137;rua  iguape 98 taboao;78,78787878787878;rua barao de iguape 98 vil sao jose;rua  iguape 98 taboao
-15;rua sebastiao fernandes tourinho 285 vil nogueira;27959;rua  sebastiao fernandes tourinho 285 vila nogueira;98,98989898989899;rua sebastiao fernandes tourinho 285 vil nogueira;rua  sebastiao fernandes tourinho 285 vila nogueira
-16;rua das ameixeiras 679 jd abc;165970;rua  das ameixeiras 979 taboao;80,64516129032258;rua das ameixeiras 679 jardim abc;rua  das ameixeiras 979 taboao
-17;rua 22 de abril 113 jd canhema;43122;rua  sete de abril 64 canhema;83,33333333333333;rua 22 de abril 113 jardim canhema;rua  sete de abril 64 canhema
-18;rua jose vicente 122 jd inamar;99539;rua  jose vicente 122 inamar;100,0;rua jose vicente 122 jardim inamar;rua  jose vicente 122 inamar
-19;rua javari 635 jd paineiras;21410;rua  javari 635 taboao;80,0;rua javari 635 jardim paineiras;rua  javari 635 taboao
-20;av eldorado 817 jardim ruyce;98493;avenida  eldorado 817 jardim ruyce;100,0;avenida eldorado 817 jardim ruyce;avenida  eldorado 817 jardim ruyce
-21;rua odete amaral de oliveira 129 prq real;168293;rua  odete amaral de oliveira 129 conceicao;87,67123287671232;rua odete amaral de oliveira 129 prq real;rua  odete amaral de oliveira 129 conceicao
-22;rua prudente de morais 300 jardim casa grande;139970;rua  prudente de morais 300 casa grande;100,0;rua prudente de morais 300 jardim casa grande;rua  prudente de morais 300 casa grande
-23;av lico maia 803 serraria;11343;avenida  lico maia 803 serraria;100,0;avenida lico maia 803 serraria;avenida  lico maia 803 serraria
-24;avn presidente juscelino 759 piraporinha;64219;avenida presidente juscelino 875 piraporinha;97,72727272727273;avenida presidente juscelino 759 piraporinha;avenida presidente juscelino 875 piraporinha
-25;avenida sinesio pereira 27 campanario;25087;avenida  synesio pereira 27 campanario;97,29729729729729;avenida sinesio pereira 27 campanario;avenida  synesio pereira 27 campanario
-26;avenida afranio peixoto 643 vila paulina;13421;avenida  afranio peixoto 0 eldorado;80,7017543859649;avenida afranio peixoto 643 vila paulina;avenida  afranio peixoto 0 eldorado
-27;rua italia 290 jardim das nacoes;151049;rua  italia 290 taboao;80,0;rua italia 290 jardim das nacoes;rua  italia 290 taboao
-28;rua graciosa s/n centro;16347;rua  graciosa 0 centro;95,0;rua graciosa s/n centro;rua  graciosa 0 centro
-29;rua caramuru 1255 vl conceicao;131520;rua  caramuru 1255 conceicao;100,0;rua caramuru 1255 vila conceicao;rua  caramuru 1255 conceicao
-30;rua manoel da nobrega 605 vl conceicao;87427;rua  manoel da nobrega 0 conceicao;96,875;rua manoel da nobrega 605 vila conceicao;rua  manoel da nobrega 0 conceicao
-31;avenida antonio piranga 700 centro;50282;avenida  antonio piranga 700 centro;100,0;avenida antonio piranga 700 centro;avenida  antonio piranga 700 centro
-32;rua nelson rodrigues 191 vl conceicao;67716;rua  nelson rodrigues 191 conceicao;100,0;rua nelson rodrigues 191 vila conceicao;rua  nelson rodrigues 191 conceicao
-33;rua santo amaro 92 centro;112213;rua santo amaro 92 centro;100,0;rua santo amaro 92 centro;rua santo amaro 92 centro
-34;rua coimbra 760 centro;102803;rua  coimbra 70 centro;97,67441860465117;rua coimbra 760 centro;rua  coimbra 70 centro
-35;rua bororos 80 conceicao;51832;rua  bororos 480 conceicao;97,95918367346938;rua bororos 80 conceicao;rua  bororos 480 conceicao
-36;avenida antonio piranga 556 centro;61402;avenida  antonio piranga 556 centro;100,0;avenida antonio piranga 556 centro;avenida  antonio piranga 556 centro
-37;rua javari 635 jardim paineiras;21410;rua  javari 635 taboao;80,0;rua javari 635 jardim paineiras;rua  javari 635 taboao
-38;rua sao jorge 98 centro;28001;rua sao jorge 98 centro;100,0;rua sao jorge 98 centro;rua sao jorge 98 centro
-39;antonio piranga 556 centro;61402;avenida  antonio piranga 556 centro;100,0;antonio piranga 556 centro;avenida  antonio piranga 556 centro
-40;avenida nossa senhora dos navegantes 332 eldorado;938;avenida nossa senhora dos navegantes 332 eldorado;100,0;avenida nossa senhora dos navegantes 332 eldorado;avenida nossa senhora dos navegantes 332 eldorado
+idx_tratado;endereco_tratado;idx_bruto;endereco_bruto;similaridade;endereco_tratado_normalizado;endereco_bruto_normalizado;cep_tratado;cep_bruto;cep_igual;distancia_metros;lat_tratado;long_tratado;lat_bruto;long_bruto
+0;av antonio piranga 614 centro;39597;avenida  antonio piranga 61 centro;98,50746269;avenida antonio piranga 614 centro;avenida  antonio piranga 61 centro;9911160;9911160;True;2651,704551;-23.686.369;-46.597.689;-23.686.363;-46.623.730
+1;avenida antonio piranga 700 centro;50282;avenida  antonio piranga 700 centro;100;avenida antonio piranga 700 centro;avenida  antonio piranga 700 centro;9911160;9911160;True;1504,537368;-23.686.098;-46.603.650;-23.686.248;-46.618.424
+2;av antonio piranga 614 centro;39597;avenida  antonio piranga 61 centro;98,50746269;avenida antonio piranga 614 centro;avenida  antonio piranga 61 centro;9911160;9911160;True;1157,159622;-23.686.369;-46.612.366;-23.686.363;-46.623.730
+3;rua dos cariris 195 piraporinha;3541;rua  dos cariris 195 piraporinha;100;rua dos cariris 195 piraporinha;rua  dos cariris 195 piraporinha;9951420;9951420;True;3878,757634;-23.689.318;-46.623.000;-23.689.450;-46.584.908
+4;rua moaciar goulart cunha caldas 111 centro;70850;rua  moacyr goulart cunha caldas 111 conceicao;86,36363636;rua moaciar goulart cunha caldas 111 centro;rua  moacyr goulart cunha caldas 111 conceicao;9911450;9911450;True;995,487391;-23.690.741;-46.625.979;-23.690.625;-46.616.203
+5;praca rui barbosa 27 piraporinha;160130;praca  rui barbosa 27 piraporinha;100;praca rui barbosa 27 piraporinha;praca  rui barbosa 27 piraporinha;9951530;9951540;False;38,46811709;-23.691.040;-46.583.043;-23.690.702;-46.583.124
+6;av nossa senhora dos navegantes 288 eldorado;43091;avenida nossa senhora dos navegantes 289 eldorado;97,95918367;avenida nossa senhora dos navegantes 288 eldorado;avenida nossa senhora dos navegantes 289 eldorado;9972260;9972260;True;25,37540812;-23.717.483;-46.624.054;-23.717.613;-46.623.849
+7;rua capibaribe 193 jardim campanario;115200;rua  capibaribe 193 campanario;100;rua capibaribe 193 jardim campanario;rua  capibaribe 193 campanario;9930530;9930530;True;307,5094902;-23.670.447;-46.623.000;-23.670.499;-46.619.981
+8;av piraporinha 1682 piraporinha;30100;avenida  piraporinha 1682 piraporinha;100;avenida piraporinha 1682 piraporinha;avenida  piraporinha 1682 piraporinha;9950000;9950000;True;20,71793457;-23.691.897;-46.587.164;-23.691.713;-46.587.132
+9;rua jose bonifacio 1641 serraria;74232;rua  jose bonifacio 1641 serraria;100;rua jose bonifacio 1641 serraria;rua  jose bonifacio 1641 serraria;9980150;9980150;True;1355,504382;-23.706.553;-46.623.000;-23.706.971;-46.609.694
+10;rua tiradentes 100 centro;39595;rua  tiradentes 100 centro;100;rua tiradentes 100 centro;rua  tiradentes 100 centro;9911160;9911190;False;41,25816697;-23.686.167;-46.616.583;-23.686.536;-46.616.541
+11;rua mem de sa 280 jardim casa grande;172305;rua  mem de sa 280 casa grande;100;rua mem de sa 280 jardim casa grande;rua  mem de sa 280 casa grande;9961170;9961158;False;23,5959308;-23.699.334;-46.591.767;-23.699.546;-46.591.777
+12;avn sao jose 472 centro;89141;avenida sao jose 472 centro;100;avenida sao jose 472 centro;avenida sao jose 472 centro;9910380;9910380;True;538,7601357;-23.689.086;-46.623.000;-23.689.076;-46.628.291
+13;rua serra de maracuja 49 parque reid;69982;rua  serra de maracuja 49 centro;87,27272727;rua serra de maracuja 49 parque reid;rua  serra de maracuja 49 centro;9920040;9920040;True;331,2622804;-23.676.691;-46.623.000;-23.676.620;-46.626.252
+14;rua barao de iguape 98 vil sao jose;162137;rua  iguape 98 taboao;78,78787879;rua barao de iguape 98 vil sao jose;rua  iguape 98 taboao;9950430;9932180;False;3318,689316;-23.677.685;-46.584.901;-23.664.945;-46.614.370
+15;rua sebastiao fernandes tourinho 285 vil nogueira;27959;rua  sebastiao fernandes tourinho 285 vila nogueira;98,98989899;rua sebastiao fernandes tourinho 285 vil nogueira;rua  sebastiao fernandes tourinho 285 vila nogueira;9951040;9951040;True;13,39588714;-23.688.413;-46.595.485;-23.688.354;-46.595.600
+16;rua das ameixeiras 679 jd abc;165970;rua  das ameixeiras 979 taboao;80,64516129;rua das ameixeiras 679 jardim abc;rua  das ameixeiras 979 taboao;9940400;9940400;True;2363,338166;-23.665.401;-46.623.000;-23.664.706;-46.599.807
+17;rua 22 de abril 113 jd canhema;43122;rua  sete de abril 64 canhema;83,33333333;rua 22 de abril 113 jardim canhema;rua  sete de abril 64 canhema;9941460;9941560;False;1533,953349;-23.678.010;-46.623.000;-23.681.764;-46.608.505
+18;rua jose vicente 122 jd inamar;99539;rua  jose vicente 122 inamar;100;rua jose vicente 122 jardim inamar;rua  jose vicente 122 inamar;9973020;9973020;True;10,98755175;-23.717.048;-46.613.337;-23.717.143;-46.613.307
+19;rua javari 635 jd paineiras;21410;rua  javari 635 taboao;80;rua javari 635 jardim paineiras;rua  javari 635 taboao;9932210;9932210;True;167,1940429;-23.664.817;-46.616.060;-23.664.585;-46.617.682
+20;av eldorado 817 jardim ruyce;98493;avenida  eldorado 817 jardim ruyce;100;avenida eldorado 817 jardim ruyce;avenida  eldorado 817 jardim ruyce;9961470;9961540;False;624,19265;-23.710.703;-46.606.319;-23.710.919;-46.600.193
+21;rua odete amaral de oliveira 129 prq real;168293;rua  odete amaral de oliveira 129 conceicao;87,67123288;rua odete amaral de oliveira 129 prq real;rua  odete amaral de oliveira 129 conceicao;9990155;9990155;True;39,8098086;-23.693.584;-46.623.000;-23.693.253;-46.623.149
+22;rua prudente de morais 300 jardim casa grande;139970;rua  prudente de morais 300 casa grande;100;rua prudente de morais 300 jardim casa grande;rua  prudente de morais 300 casa grande;9960500;9960500;True;2428,018935;-23.695.878;-46.623.000;-23.695.952;-46.599.154
+23;av lico maia 803 serraria;11343;avenida  lico maia 803 serraria;100;avenida lico maia 803 serraria;avenida  lico maia 803 serraria;9981420;9981030;False;1323,537055;-23.699.036;-46.623.000;-23.699.077;-46.610.001
+24;avn presidente juscelino 759 piraporinha;64219;avenida presidente juscelino 875 piraporinha;97,72727273;avenida presidente juscelino 759 piraporinha;avenida presidente juscelino 875 piraporinha;9950810;9950370;False;3522,310841;-23.683.010;-46.623.000;-23.682.986;-46.588.410
+25;avenida sinesio pereira 27 campanario;25087;avenida  synesio pereira 27 campanario;97,2972973;avenida sinesio pereira 27 campanario;avenida  synesio pereira 27 campanario;9931375;9931375;True;48,116128;-23.663.797;-46.624.089;-23.663.601;-46.624.510
+26;avenida afranio peixoto 643 vila paulina;13421;avenida  afranio peixoto 0 eldorado;80,70175439;avenida afranio peixoto 643 vila paulina;avenida  afranio peixoto 0 eldorado;9971360;9971360;True;410,4025278;-23.729.499;-46.623.000;-23.732.198;-46.620.250
+27;rua italia 290 jardim das nacoes;151049;rua  italia 290 taboao;80;rua italia 290 jardim das nacoes;rua  italia 290 taboao;9941030;9941030;True;24,90009663;-23.673.751;-46.609.739;-23.673.847;-46.609.518
+28;rua graciosa s/n centro;16347;rua  graciosa 0 centro;95;rua graciosa s/n centro;rua  graciosa 0 centro;9910660;9910660;True;120,0845751;-23.688.461;-46.624.156;-23.689.491;-46.624.510
+29;rua caramuru 1255 vl conceicao;131520;rua  caramuru 1255 conceicao;100;rua caramuru 1255 vila conceicao;rua  caramuru 1255 conceicao;9911510;9911510;True;44,22424179;-23.691.191;-46.610.021;-23.691.294;-46.609.601
+30;rua manoel da nobrega 605 vl conceicao;87427;rua  manoel da nobrega 0 conceicao;96,875;rua manoel da nobrega 605 vila conceicao;rua  manoel da nobrega 0 conceicao;9910720;9910720;True;877,1643069;-23.690.327;-46.623.089;-23.696.836;-46.627.956
+31;avenida antonio piranga 700 centro;50282;avenida  antonio piranga 700 centro;100;avenida antonio piranga 700 centro;avenida  antonio piranga 700 centro;9911160;9911160;True;122,1536345;-23.686.120;-46.617.233;-23.686.248;-46.618.424
+32;rua nelson rodrigues 191 vl conceicao;67716;rua  nelson rodrigues 191 conceicao;100;rua nelson rodrigues 191 vila conceicao;rua  nelson rodrigues 191 conceicao;9911440;9911440;True;19,76294397;-23.692.654;-46.618.090;-23.692.549;-46.617.933
+33;rua santo amaro 92 centro;112213;rua santo amaro 92 centro;100;rua santo amaro 92 centro;rua santo amaro 92 centro;9913090;9913090;True;951,7035998;-23.683.663;-46.623.000;-23.683.683;-46.632.346
+34;rua coimbra 760 centro;102803;rua  coimbra 70 centro;97,6744186;rua coimbra 760 centro;rua  coimbra 70 centro;9910120;9910120;True;560,1735468;-23.697.643;-46.629.555;-23.692.726;-46.630.752
+35;rua bororos 80 conceicao;51832;rua  bororos 480 conceicao;97,95918367;rua bororos 80 conceicao;rua  bororos 480 conceicao;9990270;9990270;True;196,6699615;-23.700.026;-46.615.349;-23.698.266;-46.615.158
+36;avenida antonio piranga 556 centro;61402;avenida  antonio piranga 556 centro;100;avenida antonio piranga 556 centro;avenida  antonio piranga 556 centro;9990000;9911160;False;202,484237;-23.686.446;-46.620.974;-23.686.288;-46.618.993
+37;rua javari 635 jardim paineiras;21410;rua  javari 635 taboao;80;rua javari 635 jardim paineiras;rua  javari 635 taboao;9932210;9932210;True;166,9448336;-23.664.802;-46.616.060;-23.664.585;-46.617.682
+38;rua sao jorge 98 centro;28001;rua sao jorge 98 centro;100;rua sao jorge 98 centro;rua sao jorge 98 centro;9911070;9911070;True;43,08061037;-23.685.945;-46.626.031;-23.686.088;-46.626.424
+39;antonio piranga 556 centro;61402;avenida  antonio piranga 556 centro;100;antonio piranga 556 centro;avenida  antonio piranga 556 centro;9911160;9911160;True;18,37582108;-23.686.447;-46.618.944;-23.686.288;-46.618.993
+40;avenida nossa senhora dos navegantes 332 eldorado;938;avenida nossa senhora dos navegantes 332 eldorado;100;avenida nossa senhora dos navegantes 332 eldorado;avenida nossa senhora dos navegantes 332 eldorado;9972260;9972260;True;132,6126166;-23.717.740;-46.625.165;-23.717.684;-46.623.864
