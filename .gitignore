@@ -15,3 +15,7 @@ _site/
 vendor/
 source/indexacao-rapidfuzz/3550308_SAO_PAULO.csv
 source/indexacao-rapidfuzz/3513801_DIADEMA.csv
+
+venv/
+
+./packages.microsoft.gpg
