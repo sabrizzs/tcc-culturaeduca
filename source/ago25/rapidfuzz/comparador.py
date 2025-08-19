@@ -1,6 +1,8 @@
 import pandas as pd
 from rapidfuzz import process, fuzz
 import unidecode
+from num2words import num2words
+import re
 
 
 def normalize(text):
@@ -30,11 +32,23 @@ def normalizar_abreviacoes(texto):
         texto = texto.replace(abrev, completo)
     return texto.strip()
 
+def numeros_para_texto(texto):
+    """
+    Substitui números inteiros no texto por palavras.
+    Ex: "Rua 22 de Abril" -> "Rua vinte e dois de Abril"
+    """
+    def substituir(match):
+        num = int(match.group())
+        return num2words(num, lang='pt')
+    
+    # Substitui todos os números inteiros
+    return re.sub(r'\b\d+\b', substituir, texto)
+
 def remover_tipo_logradouro(texto):
     """
     Remove tipos de logradouro (RUA, AVENIDA, ALAMEDA...) apenas para comparação textual.
     """
-    tipos = ["rua", "avenida", "alameda", "travessa", "praca", "jardim", "vila"]
+    tipos = ["acesso", "alameda", "avenida", "calcada", "chacara", "condominio", "corredor", "entrada", "escadao", "escadaria", "faixa", "passagem", "praca", "rodovia", "rua", "saida", "serra", "travessa", "travessao", "travessia", "viela"]
     texto = " " + texto.lower() + " "
     for t in tipos:
         texto = texto.replace(f" {t} ", " ")
@@ -57,6 +71,7 @@ def montar_endereco(df, colunas, excluir_col_num=None):
                 val = str(val)
             partes.append(val)
         texto = " ".join(partes)
+        texto = numeros_para_texto(texto)
         texto = normalize(texto)
         texto = normalizar_abreviacoes(texto)
         texto = remover_tipo_logradouro(texto)
@@ -76,6 +91,19 @@ def formatar_endereco(row, colunas):
         else:
             partes.append(str(val))
     return " ".join(partes).strip()
+
+def possivel_bairro_diferente(end1, end2, score_final, penalizacao=0.95):
+    """
+    Penaliza o score final se os últimos tokens (possíveis bairros) forem diferentes.
+    """
+    tokens1 = end1.split()
+    tokens2 = end2.split()
+    
+    if tokens1 and tokens2:
+        ult1, ult2 = tokens1[-1], tokens2[-1]
+        if ult1 != ult2:  # se o último token for diferente -> provável bairro diferente
+            return score_final * penalizacao
+    return score_final
 
 def comparar_enderecos(df1, df2, colunas1, colunas2,
                        col_num1=None, col_num2=None,
@@ -126,7 +154,8 @@ def comparar_enderecos(df1, df2, colunas1, colunas2,
         matches_all = process.extract(
             endereco1,
             df2["endereco_normalizado"],
-            scorer=fuzz.token_set_ratio, # mede similaridade de texto ignorando ordem
+            # fuzz.token_set_ratio: ignora a ordem das palavras e considera apenas o conjunto de tokens
+            scorer=fuzz.token_set_ratio, 
             limit=None # retorna todos os matches possíveis
         )
 
@@ -155,6 +184,8 @@ def comparar_enderecos(df1, df2, colunas1, colunas2,
             else:
                 # Combina similaridade de texto e número com pesos
                 score_final = score_texto * peso_texto + score_numero * peso_numero
+
+            score_final = possivel_bairro_diferente(endereco1, endereco2_texto, score_final)
 
             matches_final.append((idx2, score_texto, score_numero, score_final))
 
