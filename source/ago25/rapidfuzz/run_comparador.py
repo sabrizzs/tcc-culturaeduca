@@ -6,8 +6,8 @@ import time
 start_time = time.time()
 
 # Arquivos e colunas
-arquivo1 = "cnes_geo_padrao_ouro_diadema.csv"
-arquivo2 = "3513801_DIADEMA.csv"
+arquivo1 = "../files_input/cnes_geo_padrao_ouro_diadema.csv"
+arquivo2 = "../files_input/3513801_DIADEMA.csv"
 
 colunas_arquivo1 = ["NO_LOGRADO", "NO_BAIRRO"]
 colunas_arquivo2 = ["NOM_TIPO_SEGLOGR", "NOM_TITULO_SEGLOGR", "NOM_SEGLOGR", "DSC_LOCALIDADE"]
