@@ -111,3 +111,22 @@ sudo chown root:root /etc/elasticsearch/certs/http_ca.crt
 | Firewall configurado      | Reduz superfície de ataque      |
 | Certificados automáticos  | Segurança por padrão            |
 | Proxy reverso (NGINX)     | Camada extra de proteção        |
+
+
+## Depois de instalado, verificar status:
+
+### Status
+
+`sudo systemctl status elasticsearch.service`
+
+### Start
+
+`sudo systemctl status elasticsearch.service`
+
+### Stop
+
+`sudo systemctl stop elasticsearch.service`
+
+### Restart
+
+`sudo systemctl restart elasticsearch.service`
