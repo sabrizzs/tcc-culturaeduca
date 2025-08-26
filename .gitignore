@@ -19,3 +19,5 @@ source/indexacao-rapidfuzz/3513801_DIADEMA.csv
 venv/
 
 ./packages.microsoft.gpg
+
+.env
