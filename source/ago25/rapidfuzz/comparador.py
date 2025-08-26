@@ -4,6 +4,36 @@ import unidecode
 from num2words import num2words
 import re
 
+"""
+Este código utiliza a biblioteca RapidFuzz para comparar endereços entre dois DataFrames
+e encontrar o melhor "match" entre eles.
+
+Objetivo:
+    - Receber dois conjuntos de endereços (df1 e df2).
+    - Normalizar os textos (tirar acentos, abreviações e tipos de logradouro).
+    - Calcular a similaridade entre os endereços de df1 e os de df2.
+    - Retornar o melhor match e sugestões alternativas, considerando:
+        (a) Similaridade textual do logradouro.
+        (b) Similaridade numérica do número do endereço.
+
+Como a similaridade textual é calculada:
+    - Usa a função fuzz.token_set_ratio do RapidFuzz.
+    - Essa função divide o texto em tokens (palavras), ignora a ordem e compara os conjuntos.
+    - Exemplo: "Rua das Flores" vs "Flores Rua das" → 100 (iguais).
+    - Internamente, a comparação usa a distância de edição de Levenshtein,
+      que mede o número mínimo de operações (inserção, remoção, substituição)
+      necessárias para transformar uma string em outra.
+
+Como o score final é definido:
+    - Similaridade final = (peso_texto * score_texto) + (peso_numero * score_numero).
+    - Se não houver número disponível, considera apenas o texto.
+
+Resultado:
+    - Para cada endereço em df1, o código retorna:
+        * Melhor correspondência em df2.
+        * Scores de similaridade (texto, número e final).
+        * Lista das Top N sugestões mais próximas.
+"""
 
 def normalize(text):
     """
