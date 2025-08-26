@@ -163,7 +163,8 @@ def buscar_similares_elasticsearch(es, endereco, index_name, size=100):
         }
     }
     res = es.search(index=index_name, body=query, size=size)
-    return [(hit["_source"]["endereco_normalizado"], hit["_score"], hit["_source"]["original_index"]) for hit in res["hits"]["hits"]]
+    max_sc = res["hits"].get("max_score") or 1.0
+    return [(hit["_source"]["endereco_normalizado"], (hit["_score"]/max_sc)*100, hit["_source"]["original_index"]) for hit in res["hits"]["hits"]]
 
 def possivel_bairro_diferente(end1, end2, score_final, penalizacao=0.95):
     """
@@ -189,7 +190,6 @@ def comparar_enderecos_es(df1, df2, colunas1, colunas2,
     df1["endereco_normalizado"] = montar_endereco(df1, colunas1, excluir_col_num=col_num1)
     df2["endereco_normalizado"] = montar_endereco(df2, colunas2, excluir_col_num=col_num2)
 
-    print(df2["endereco_normalizado"])
     es = indexar_enderecos_elasticsearch(df2, index_name=index_name)
     time.sleep(1)  # Espera para o índice estar pronto
 
