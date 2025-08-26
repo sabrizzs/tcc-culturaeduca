@@ -3,12 +3,37 @@ from datetime import datetime
 from comparador import comparar_enderecos
 import time
 
+"""
+Script principal para comparar endereços de duas bases de dados usando a função
+comparar_enderecos (do código comparador.py).
+
+Passos executados pelo script:
+    1. Define os arquivos de entrada:
+        * arquivo1 = base de endereços a localizar.
+        * arquivo2 = base de referência onde procurar correspondências.
+    2. Define quais colunas de cada arquivo compõem o endereço.
+    3. Extrai e converte a coluna de número do logradouro em inteiro (quando possível).
+    4. Executa a comparação chamando comparar_enderecos:
+        - Usa pesos para texto (0.9) e número (0.1).
+        - Define o limite mínimo de similaridade (85).
+        - Retorna também as Top N sugestões de matches (20).
+    5. Faz uma contagem dos resultados agrupados em faixas de similaridade:
+        * 100
+        * 91–99
+        * 81–90
+        * 0–80
+    6. Gera um arquivo de saída Excel contendo:
+        - Aba "Enderecos": matches detalhados.
+        - Aba "Resumo similaridade": distribuição por faixa.
+"""
+
 start_time = time.time()
 
 # Arquivos e colunas
 arquivo1 = "cnes_geo_padrao_ouro_diadema.csv" # endereços a serem localizados na base de referência
 arquivo2 = "3513801_DIADEMA.csv" # base de referência onde o algoritmo vai tentar encontrar correspondências
 
+# Colunas que compõem o endereço
 colunas_arquivo1 = ["NO_LOGRADO", "NO_BAIRRO"]
 colunas_arquivo2 = ["NOM_TIPO_SEGLOGR", "NOM_TITULO_SEGLOGR", "NOM_SEGLOGR", "DSC_LOCALIDADE"]
 
@@ -62,7 +87,6 @@ for nome, (min_val, max_val) in faixas.items():
     contagem_faixas[nome] = contagem
 
 df_resumo = pd.DataFrame(list(contagem_faixas.items()), columns=["Faixa Similaridade", "Quantidade"])
-
 
 # Nomeia o arquivo de saída com timestamp
 timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

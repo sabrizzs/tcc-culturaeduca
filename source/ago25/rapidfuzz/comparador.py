@@ -71,7 +71,6 @@ def numeros_para_texto(texto):
         num = int(match.group())
         return num2words(num, lang='pt')
     
-    # Substitui todos os números inteiros
     return re.sub(r'\b\d+\b', substituir, texto)
 
 def remover_tipo_logradouro(texto):
