@@ -12,13 +12,12 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 arquivo1 = os.path.join(BASE_DIR, "cnes_geo_padrao_ouro_diadema.csv")
 arquivo2 = os.path.join(BASE_DIR, "3513801_DIADEMA.csv")
 
-# Caminhos dos arquivos
-# arquivo1 = "cnes_geo_padrao_ouro_diadema.csv"
-# arquivo2 = "3513801_DIADEMA.csv"
+colunas_arquivo1 = ["NO_LOGRADO"]
+colunas_arquivo2 = ["NOM_TIPO_SEGLOGR", "NOM_TITULO_SEGLOGR", "NOM_SEGLOGR"]
 
-# Colunas a serem usadas na montagem dos endereços
-colunas_arquivo1 = ["NO_LOGRADO", "NO_BAIRRO"]
-colunas_arquivo2 = ["NOM_TIPO_SEGLOGR", "NOM_TITULO_SEGLOGR", "NOM_SEGLOGR", "DSC_LOCALIDADE"]
+# colunas com bairro
+coluna_bairro_arquivo1 = "NO_BAIRRO"
+coluna_bairro_arquivo2 = "DSC_LOCALIDADE"
 
 # Colunas com número
 coluna_numero_arquivo1 = "NU_ENDEREC"
@@ -41,11 +40,14 @@ def extrair_numero(df, coluna_num):
 df1["numero_logradouro"] = extrair_numero(df1, coluna_numero_arquivo1)
 df2["numero_logradouro"] = extrair_numero(df2, coluna_numero_arquivo2)
 
+
 # Executa a comparação usando Elasticsearch
 df_resultados = comparar_enderecos_es(
     df1, df2,
     colunas1=colunas_arquivo1,
     colunas2=colunas_arquivo2,
+    coluna_bairro_arquivo1=coluna_bairro_arquivo1,
+    coluna_bairro_arquivo2=coluna_bairro_arquivo2,
     col_num1="numero_logradouro",
     col_num2="numero_logradouro",
     peso_texto=0.9,
@@ -53,18 +55,6 @@ df_resultados = comparar_enderecos_es(
     top_n=20,
     index_name="enderecos_ref_diadema"  # índice único para este job
 )
-
-# # Nomeia o arquivo de saída com timestamp
-# timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-# nome_arquivo = f"result_elasticsearch_{timestamp}.csv"
-
-# # Exporta para CSV
-# df_resultados.to_csv(nome_arquivo, sep=";", decimal=",", index=False)
-
-# end_time = time.time()
-# print(f"Comparação concluída e arquivo salvo em {nome_arquivo}.")
-# print(f"Tempo de execução: {end_time - start_time:.2f} segundos.")
-
 
 # Contagem por faixas de similaridade para análise
 faixas = {

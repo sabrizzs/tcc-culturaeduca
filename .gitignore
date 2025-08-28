@@ -21,3 +21,5 @@ venv/
 ./packages.microsoft.gpg
 
 .env
+
+source/ago25/elasticsearch/teste.ipynb
