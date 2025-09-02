@@ -56,7 +56,10 @@ def normalizar_abreviacoes(texto):
         " tr ": " travessa ",
         " jd ": " jardim ",
         " vl ": " vila ",
-        " prq ": " parque "
+        " prq ": " parque ",
+        " jdm ": " jardim ",
+        " pq ": " parque ",
+        " vil ": " vila "
     }
     texto = " " + texto + " "
     for abrev, completo in abreviacoes.items():
@@ -113,7 +116,7 @@ def normalize_bairro(df, col_bairro):
     """
     if col_bairro is None:
         return pd.Series([""] * len(df), index=df.index)
-    return df[col_bairro].fillna("").apply(lambda x: normalize(str(x)))
+    return df[col_bairro].fillna("").apply(lambda x: normalizar_abreviacoes(normalize(str(x))))
 
 def formatar_endereco(row, colunas):
     """
@@ -129,25 +132,12 @@ def formatar_endereco(row, colunas):
             partes.append(str(val))
     return " ".join(partes).strip()
 
-def possivel_bairro_diferente(end1, end2, score_final, penalizacao=0.95):
-    """
-    Penaliza o score final se os últimos tokens (possíveis bairros) forem diferentes.
-    """
-    tokens1 = end1.split()
-    tokens2 = end2.split()
-    
-    if tokens1 and tokens2:
-        ult1, ult2 = tokens1[-1], tokens2[-1]
-        if ult1 != ult2:  # se o último token for diferente -> provável bairro diferente
-            return score_final * penalizacao
-    return score_final
-
 def comparar_enderecos(df1, df2,
                        colunas_logradouro1, colunas_logradouro2,
                        col_num1=None, col_num2=None,
                        col_bairro1=None, col_bairro2=None,
                        limiar_similaridade=85,
-                       peso_logradouro=0.7, peso_numero=0.2, peso_bairro=0.1,
+                       peso_logradouro=0.65, peso_numero=0.30, peso_bairro=0.05,
                        top_n=5):
     
     """
@@ -237,6 +227,20 @@ def comparar_enderecos(df1, df2,
 
         # Ordena
         matches_final.sort(key=lambda x: x[4], reverse=True)
+
+        # Override: promove número exato
+        preferir_numero_exato = True
+        margem_override = 8
+
+        if preferir_numero_exato:
+            # pega candidatos com número exato (score_num == 100)
+            candidatos_exatos = [m for m in matches_final if m[2] == 100]
+            if candidatos_exatos:
+                melhor_exato = max(candidatos_exatos, key=lambda x: (x[1], x[4]))  # prioriza logradouro e score_final
+                melhor_atual = matches_final[0]
+                if melhor_exato[4] >= (melhor_atual[4] - margem_override):
+                    matches_final.remove(melhor_exato)
+                    matches_final.insert(0, melhor_exato)
 
         # Melhor match
         idx2, score_log, score_num, score_bairro, melhor_final = matches_final[0]
