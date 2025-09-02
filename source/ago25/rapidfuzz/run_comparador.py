@@ -33,9 +33,13 @@ start_time = time.time()
 arquivo1 = "cnes_geo_padrao_ouro_diadema.csv" # endereços a serem localizados na base de referência
 arquivo2 = "3513801_DIADEMA.csv" # base de referência onde o algoritmo vai tentar encontrar correspondências
 
-# Colunas que compõem o endereço
-colunas_arquivo1 = ["NO_LOGRADO", "NO_BAIRRO"]
-colunas_arquivo2 = ["NOM_TIPO_SEGLOGR", "NOM_TITULO_SEGLOGR", "NOM_SEGLOGR", "DSC_LOCALIDADE"]
+# Colunas do logradouro
+colunas_logradouro_arquivo1 = ["NO_LOGRADO"]
+colunas_logradouro_arquivo2 = ["NOM_TIPO_SEGLOGR", "NOM_TITULO_SEGLOGR", "NOM_SEGLOGR"]
+
+# Colunas do bairro
+coluna_bairro_arquivo1 = "NO_BAIRRO"
+coluna_bairro_arquivo2 = "DSC_LOCALIDADE"
 
 # Colunas do número do logradouro para cada arquivo
 coluna_numero_arquivo1 = "NU_ENDEREC"
@@ -60,14 +64,17 @@ df2["numero_logradouro"] = extrair_numero(df2, coluna_numero_arquivo2)
 # Executa comparação
 df_resultados = comparar_enderecos(
     df1, df2,
-    colunas1=colunas_arquivo1,
-    colunas2=colunas_arquivo2,
+    colunas_logradouro1=colunas_logradouro_arquivo1,
+    colunas_logradouro2=colunas_logradouro_arquivo2,
+    col_bairro1=coluna_bairro_arquivo1,
+    col_bairro2=coluna_bairro_arquivo2,
     col_num1="numero_logradouro",
     col_num2="numero_logradouro",
     limiar_similaridade=85,
-    peso_texto=0.9,     # peso maior para similaridade de texto
-    peso_numero=0.1,    # peso menor para número
-    top_n=20            # sugestões no relatório
+    peso_logradouro=0.7,  # peso maior para rua
+    peso_numero=0.2,      # número também importante
+    peso_bairro=0.1,      # bairro como refinamento
+    top_n=20
 )
 
 # Contagem por faixas de similaridade para análise

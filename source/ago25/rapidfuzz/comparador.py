@@ -55,7 +55,8 @@ def normalizar_abreviacoes(texto):
         " al ": " alameda ",
         " tr ": " travessa ",
         " jd ": " jardim ",
-        " vl ": " vila "
+        " vl ": " vila ",
+        " prq ": " parque "
     }
     texto = " " + texto + " "
     for abrev, completo in abreviacoes.items():
@@ -83,10 +84,9 @@ def remover_tipo_logradouro(texto):
         texto = texto.replace(f" {t} ", " ")
     return texto.strip()
 
-def montar_endereco(df, colunas, excluir_col_num=None):
+def montar_logradouro(df, colunas, excluir_col_num=None):
     """
-    Concatena as colunas que contém as partes do endereço em uma string única
-    e aplica normalização de texto e abreviações.
+    Concatena colunas que formam o logradouro (sem bairro) e aplica normalização.
     """
     def concat_normaliza(row):
         partes = []
@@ -106,6 +106,14 @@ def montar_endereco(df, colunas, excluir_col_num=None):
         texto = remover_tipo_logradouro(texto)
         return texto
     return df.apply(concat_normaliza, axis=1)
+
+def normalize_bairro(df, col_bairro):
+    """
+    Normaliza apenas a coluna de bairro.
+    """
+    if col_bairro is None:
+        return pd.Series([""] * len(df), index=df.index)
+    return df[col_bairro].fillna("").apply(lambda x: normalize(str(x)))
 
 def formatar_endereco(row, colunas):
     """
@@ -134,9 +142,12 @@ def possivel_bairro_diferente(end1, end2, score_final, penalizacao=0.95):
             return score_final * penalizacao
     return score_final
 
-def comparar_enderecos(df1, df2, colunas1, colunas2,
+def comparar_enderecos(df1, df2,
+                       colunas_logradouro1, colunas_logradouro2,
                        col_num1=None, col_num2=None,
-                       limiar_similaridade=85, peso_texto=0.7, peso_numero=0.3,
+                       col_bairro1=None, col_bairro2=None,
+                       limiar_similaridade=85,
+                       peso_logradouro=0.7, peso_numero=0.2, peso_bairro=0.1,
                        top_n=5):
     
     """
@@ -157,8 +168,12 @@ def comparar_enderecos(df1, df2, colunas1, colunas2,
     df1 = df1.copy() # DataFrame com os endereços que você quer procurar.  
     df2 = df2.copy() # DataFrame com os endereços que servirão de referência para a busca.  
 
-    df1["endereco_normalizado"] = montar_endereco(df1, colunas1, excluir_col_num=col_num1)
-    df2["endereco_normalizado"] = montar_endereco(df2, colunas2, excluir_col_num=col_num2)
+    # Normalização
+    df1["logradouro_normalizado"] = montar_logradouro(df1, colunas_logradouro1, excluir_col_num=col_num1)
+    df2["logradouro_normalizado"] = montar_logradouro(df2, colunas_logradouro2, excluir_col_num=col_num2)
+
+    df1["bairro_normalizado"] = normalize_bairro(df1, col_bairro1)
+    df2["bairro_normalizado"] = normalize_bairro(df2, col_bairro2)
 
     resultados = []
 
@@ -177,12 +192,12 @@ def comparar_enderecos(df1, df2, colunas1, colunas2,
             return None
 
     # Loop principal: percorre todos os endereços do df1
-    for idx1, endereco1 in df1["endereco_normalizado"].items():
+    for idx1, endereco1 in df1["logradouro_normalizado"].items():
 
-        # Busca todos os matches textuais no df2
+        # Busca candidatos pelo logradouro
         matches_all = process.extract(
             endereco1,
-            df2["endereco_normalizado"],
+            df2["logradouro_normalizado"],
             # fuzz.token_set_ratio: ignora a ordem das palavras e considera apenas o conjunto de tokens
             scorer=fuzz.token_set_ratio, 
             limit=None # retorna todos os matches possíveis
@@ -190,66 +205,64 @@ def comparar_enderecos(df1, df2, colunas1, colunas2,
 
         num1 = df1.loc[idx1, col_num1] if col_num1 else None
         num1_int = try_int(num1)
+        bairro1 = df1.loc[idx1, "bairro_normalizado"]
 
         matches_final = []
-        for endereco2_texto, score_texto, idx2 in matches_all:
+        for log2_texto, score_log, idx2 in matches_all:
             num2 = df2.loc[idx2, col_num2] if col_num2 else None
             num2_int = try_int(num2)
+            bairro2 = df2.loc[idx2, "bairro_normalizado"]
 
+            # Similaridade numérica
             if num1_int is not None and num2_int is not None:
                 diff = abs(num1_int - num2_int)
                 if diff == 0:
-                    score_numero = 100
+                    score_num = 100
                 else:
-                    # Similaridade baseada em quão próximos estão
-                    score_numero = max(0, 100 * (1 - diff / max(num1_int, num2_int)))
+                    score_num = max(0, 100 * (1 - diff / max(num1_int, num2_int)))
             else:
-                score_numero = None
+                score_num = None
 
-            
-            if score_numero is None:
-                # Ajusta o score final: se número ausente, considera só o texto
-                score_final = score_texto
-            else:
-                # Combina similaridade de texto e número com pesos
-                score_final = score_texto * peso_texto + score_numero * peso_numero
+            # Similaridade de bairro
+            score_bairro = fuzz.token_set_ratio(bairro1, bairro2) if bairro1 or bairro2 else None
 
-            score_final = possivel_bairro_diferente(endereco1, endereco2_texto, score_final)
-
-            matches_final.append((idx2, score_texto, score_numero, score_final))
-
-        # Ordena pelo score final
-        matches_final.sort(key=lambda x: x[3], reverse=True)
-
-        # Melhor match
-        idx2, score_texto, score_numero, melhor_score_final = matches_final[0]
-
-        # Sugestões top N pelo score final
-        sugestoes_formatadas = []
-        for idx2_sug, score_texto_sug, score_numero_sug, score_final_sug in matches_final[:top_n]:
-            endereco_original = formatar_endereco(df2.loc[idx2_sug], colunas2)
-            
-            # Adiciona o número
-            numero = df2.loc[idx2_sug, col_num2] if col_num2 else ""
-            
-            score_final_str = f"{score_final_sug:.0f}" if score_final_sug is not None else "N/A"
-
-            sugestoes_formatadas.append(
-                f"{endereco_original} {numero} | Score Final: {score_final_str}"
+            # Score final
+            score_final = (
+                score_log * peso_logradouro +
+                (score_num if score_num is not None else score_log) * peso_numero +
+                (score_bairro if score_bairro is not None else score_log) * peso_bairro
             )
 
+            matches_final.append((idx2, score_log, score_num, score_bairro, score_final))
 
-        # Armazena o resultado no DataFrame final
+        # Ordena
+        matches_final.sort(key=lambda x: x[4], reverse=True)
+
+        # Melhor match
+        idx2, score_log, score_num, score_bairro, melhor_final = matches_final[0]
+
+        # Sugestões
+        sugestoes_formatadas = []
+        for idx2_sug, sc_log, sc_num, sc_bai, sc_final in matches_final[:top_n]:
+            endereco_original = formatar_endereco(df2.loc[idx2_sug], colunas_logradouro2 + ([col_bairro2] if col_bairro2 else []))
+            numero = df2.loc[idx2_sug, col_num2] if col_num2 else ""
+            sugestoes_formatadas.append(
+                f"{endereco_original} {numero} | Score Final: {sc_final:.0f}"
+            )
+
         resultados.append({
             "idx_df1": idx1,
-            "endereco_df1": formatar_endereco(df1.loc[idx1], colunas1),
+            "endereco_df1": formatar_endereco(df1.loc[idx1], colunas_logradouro1 + ([col_bairro1] if col_bairro1 else [])),
             "numero_df1": num1,
+            "bairro_df1": bairro1,
             "idx_df2": idx2,
-            "endereco_df2": formatar_endereco(df2.iloc[idx2], colunas2),
+            "endereco_df2": formatar_endereco(df2.loc[idx2], colunas_logradouro2 + ([col_bairro2] if col_bairro2 else [])),
             "numero_df2": df2.loc[idx2, col_num2] if col_num2 else None,
-            "similaridade_texto": round(score_texto, 2),
-            "similaridade_numero": round(score_numero, 2) if score_numero is not None else None,
-            "similaridade_final": round(melhor_score_final, 2) if melhor_score_final is not None else None,
+            "bairro_df2": df2.loc[idx2, "bairro_normalizado"],
+            "similaridade_logradouro": round(score_log, 2),
+            "similaridade_numero": round(score_num, 2) if score_num is not None else None,
+            "similaridade_bairro": round(score_bairro, 2) if score_bairro is not None else None,
+            "similaridade_final": round(melhor_final, 2),
             "sugestoes_topN": "; ".join(sugestoes_formatadas)
         })
 
