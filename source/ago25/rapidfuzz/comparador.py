@@ -229,6 +229,14 @@ def comparar_enderecos(df1, df2,
         matches_final.sort(key=lambda x: x[4], reverse=True)
 
         # Override: promove número exato
+        """
+        # --- Margem Override ---
+        Se houver algum candidato com número exatamente igual (score_num == 100),
+        ele pode ser promovido para o primeiro lugar mesmo que não tenha o maior score final.
+        A promoção só acontece se a diferença entre o score_final do líder atual e do candidato exato
+        for menor ou igual a "margem_override".
+        Isso garante que números exatos sejam priorizados, mas sem ignorar casos onde o texto é muito mais próximo.
+        """
         preferir_numero_exato = True
         margem_override = 8
 
