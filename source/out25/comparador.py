@@ -176,7 +176,14 @@ def comparar(df1: pd.DataFrame, df2: pd.DataFrame,
             )
     elif algoritmo == "llm":
         from llm_module import executar_llm
-        return executar_llm(df1_preparado, df2_preparado, col_num1, col_num2, **kwargs)
+        return executar_llm(
+            df1_preparado, df2_preparado,
+            colunas_logradouro1, colunas_logradouro2,
+            col_num1=col_num1, col_num2=col_num2,
+            col_bairro1=col_bairro1, col_bairro2=col_bairro2,
+            **kwargs
+        )
+
     else:
         raise ValueError("Algoritmo inválido. Escolha 'rapidfuzz' ou 'llm'.")
 
