@@ -1,4 +1,3 @@
-# llm_module.py
 import pandas as pd
 import torch
 from sentence_transformers import SentenceTransformer, util
@@ -10,7 +9,7 @@ def executar_llm(
     col_num1=None, col_num2=None,
     col_bairro1=None, col_bairro2=None,
     top_n=5,
-    peso_logradouro=0.65, peso_numero=0.3, peso_bairro=0.05,
+    peso_logradouro=0.5, peso_numero=0.4, peso_bairro=0.1,
     **kwargs
 ):
     """
@@ -30,16 +29,23 @@ def executar_llm(
     df1["bairro_normalizado"] = normalize_bairro(df1, col_bairro1)
     df2["bairro_normalizado"] = normalize_bairro(df2, col_bairro2)
 
-    # Cria embeddings
+    # Cria embeddings dos logradouros
     emb1 = model.encode(df1["logradouro_normalizado"].tolist(), convert_to_tensor=True, show_progress_bar=True)
     emb2 = model.encode(df2["logradouro_normalizado"].tolist(), convert_to_tensor=True, show_progress_bar=True)
+
+    # Cria embeddings dos bairros (pré-cálculo para performance)
+    emb_bairros1 = model.encode(df1["bairro_normalizado"].tolist(), convert_to_tensor=True)
+    emb_bairros2 = model.encode(df2["bairro_normalizado"].tolist(), convert_to_tensor=True)
 
     resultados = []
 
     def try_int(n):
-        if pd.isna(n): return None
-        try: return int(float(n))
-        except: return None
+        if pd.isna(n):
+            return None
+        try:
+            return int(float(n))
+        except:
+            return None
 
     for idx1, endereco1 in enumerate(df1["logradouro_normalizado"]):
         # Similaridade de logradouro via embeddings
@@ -56,20 +62,19 @@ def executar_llm(
             num2_int = try_int(df2.loc[idx2, col_num2]) if col_num2 else None
             bairro2 = df2.loc[idx2, "bairro_normalizado"]
 
-            # Similaridade numérica
+            # Similaridade numérica corrigida
             if num1_int is not None and num2_int is not None:
                 diff = abs(num1_int - num2_int)
-                score_num = 100 if diff == 0 else max(0, 100 * (1 - diff / max(num1_int, num2_int)))
+                # Penaliza diferenças grandes de forma exponencial
+                score_num = 100 * (0.5 ** (diff / 10))
             else:
-                score_num = score_log
+                score_num = 0  # se número não existe, consideramos 0
 
-            # Similaridade bairro (texto)
+            # Similaridade bairro
             if bairro1 or bairro2:
-                emb_b1 = model.encode([bairro1 or ""], convert_to_tensor=True)
-                emb_b2 = model.encode([bairro2 or ""], convert_to_tensor=True)
-                score_bairro = float(util.cos_sim(emb_b1, emb_b2).item()) * 100
+                score_bairro = float(util.cos_sim(emb_bairros1[idx1], emb_bairros2[idx2]).item()) * 100
             else:
-                score_bairro = score_log
+                score_bairro = 0
 
             # Score final ponderado
             score_final = (
@@ -80,7 +85,7 @@ def executar_llm(
 
             matches_final.append((idx2, score_log, score_num, score_bairro, score_final))
 
-        # Ordena
+        # Ordena pelo score final
         matches_final.sort(key=lambda x: x[4], reverse=True)
 
         # Melhor match
