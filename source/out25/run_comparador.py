@@ -33,7 +33,7 @@ coluna_numero_arquivo1 = "NU_ENDEREC"
 coluna_numero_arquivo2 = "NUM_ENDERECO"
 
 # Parâmetros de comparação
-algoritmo = "llm"  # 'rapidfuzz' ou 'llm'
+algoritmo = "llm"  # 'rapidfuzz' ou 'llm' ou 'elasticsearch'
 top_n = 20
 limiar_similaridade = 85
 pesos = {
