@@ -4,6 +4,7 @@ import unidecode
 import time
 from num2words import num2words
 import re
+from geopy.distance import geodesic
 
 def normalize(text):
     if pd.isna(text):
@@ -170,6 +171,248 @@ def indexar_enderecos_elasticsearch(df, index_name="enderecos_ref"):
     return es
 
 
+# def buscar_similares_elasticsearch(
+#     es,
+#     endereco: str | None,
+#     bairro: str | None,
+#     index_name: str,
+#     numero: str | int | None = None,
+#     w_endereco: float = 3.0,
+#     w_bairro: float = 1.0,
+#     w_numero: float = 0.3,          # peso do número (bônus baixo)
+#     numero_field: str = "numero",  # CAMPO NUMÉRICO (long)
+#     gauss_scale: float = 2.0,       # quão “perto” conta muito (≈ metade do bônus em ±scale)
+#     gauss_decay: float = 0.5,       # quanto decai na distância=scale
+#     collapse_on_code: bool = True
+# ):
+#     def _wrap_num_proximity(query, numero_int):
+#         # Aplica bônus por proximidade do número (gauss)
+#         return {
+#             "function_score": {
+#                 "query": query,
+#                 "functions": [
+#                     {
+#                         "gauss": {
+#                             numero_field: {
+#                                 "origin": numero_int,
+#                                 "scale": gauss_scale,
+#                                 "decay": gauss_decay
+#                             }
+#                         },
+#                         "weight": w_numero
+#                     }
+#                 ],
+#                 "score_mode": "sum",
+#                 "boost_mode": "sum"
+#             }
+#         }
+
+#     def _search(query, size=1):
+#         body = {"query": query, "size": size, "track_total_hits": True}
+#         if collapse_on_code:
+#             body["collapse"] = {"field": "original_index"}
+#         return es.search(index=index_name, **body)
+
+#     # parse do número para inteiro (só aplica proximidade se der)
+#     numero_int = None
+#     if numero is not None:
+#         try:
+#             numero_int = int(str(numero).strip())
+#         except ValueError:
+#             numero_int = None  # ignora proximidade se não for inteiro
+
+#     # --- Tentativa 1: should com boosts individuais ---
+#     should = []
+#     if endereco:
+#         should.append({"match": {"endereco_normalizado": {"query": endereco, "fuzziness": "AUTO", "boost": w_endereco}}})
+#         should.append({"match_phrase": {"endereco_normalizado": {"query": endereco, "slop": 2, "boost": w_endereco * 0.5}}})
+#     if bairro:
+#         should.append({"match": {"bairro_normalizado": {"query": bairro, "fuzziness": "AUTO", "boost": w_bairro}}})
+
+#     base_query = {"bool": {"should": should, "minimum_should_match": 1}} if should else {"match_all": {}}
+#     query1 = _wrap_num_proximity(base_query, numero_int) if numero_int is not None else base_query
+#     res = _search(query1)
+#     hits = res.get("hits", {}).get("hits", [])
+
+#     # --- Tentativa 2: cross_fields (endereco+bairro combinados)
+#     if not hits and endereco and bairro:
+#         combined = f"{endereco} {bairro}"
+#         base2 = {
+#             "multi_match": {
+#                 "query": combined,
+#                 "type": "cross_fields",
+#                 "fields": [f"endereco_normalizado^{w_endereco}", f"bairro_normalizado^{w_bairro}"],
+#                 "operator": "OR"
+#             }
+#         }
+#         query2 = _wrap_num_proximity(base2, numero_int) if numero_int is not None else base2
+#         res = _search(query2)
+#         hits = res.get("hits", {}).get("hits", [])
+
+#     # --- Tentativa 3: most_fields (mais permissivo)
+#     if not hits and (endereco or bairro):
+#         combined = " ".join([x for x in [endereco, bairro] if x])
+#         base3 = {
+#             "multi_match": {
+#                 "query": combined,
+#                 "type": "most_fields",
+#                 "fields": [f"endereco_normalizado^{w_endereco}", f"bairro_normalizado^{w_bairro}"],
+#             }
+#         }
+#         query3 = _wrap_num_proximity(base3, numero_int) if numero_int is not None else base3
+#         res = _search(query3)
+#         hits = res.get("hits", {}).get("hits", [])
+
+#     # --- Último recurso: usa match_all mas ainda prioriza número próximo (se houver)
+#     if not hits:
+#         base4 = {"match_all": {}}
+#         query4 = _wrap_num_proximity(base4, numero_int) if numero_int is not None else base4
+#         res = _search(query4, size=1)
+#         hits = res.get("hits", {}).get("hits", [])
+#         if not hits:
+#             return [(None, None, 0.0, None)]
+#         h = hits[0]; s = h.get("_source", {})
+#         return [(s.get("endereco_normalizado", ""), s.get("bairro_normalizado", ""), 0.0, s.get("original_index"))]
+
+#     # --- Normaliza pelo melhor score
+#     h0 = hits[0]; s0 = h0.get("_source", {})
+#     top = (h0.get("_score") or 1.0)
+#     return [(
+#         s0.get("endereco_normalizado", ""),
+#         s0.get("bairro_normalizado", ""),
+#         (h0.get("_score", 0.0) / top) * 100.0,
+#         s0.get("original_index"),
+#     )]
+
+
+# def buscar_similares_elasticsearch(
+#     es: Elasticsearch,
+#     endereco: str | None,
+#     bairro: str | None,
+#     index_name: str,
+#     numero: str | int | None = None,
+#     pesos: dict | None = None,              # {"endereco": 3.0, "bairro": 1.0, "numero": 0.3}
+#     numero_field: str = "numero",           # campo numérico (long/int)
+#     gauss_scale: float = 2.0,
+#     gauss_decay: float = 0.5,
+#     collapse_on_code: bool = True,
+#     size: int = 1,
+#     normalize_score_pct: bool = False,      # se True e size>1, devolve % normalizada
+# ):
+#     """
+#     Busca similares com pesos paramétricos. A ordem de prioridade é definida pelos pesos.
+#     Campos textuais disponíveis: endereco_normalizado, bairro_normalizado.
+#     Campo numérico opcional: numero (proximidade via gauss).
+#     """
+
+#     # 1) Pesos padrão
+#     pesos = {**{"endereco": 3.0, "bairro": 1.0, "numero": 0.3}, **(pesos or {})}
+
+#     # 2) Coletar os valores informados e ordenar por peso desc (somente campos presentes)
+#     valores = {
+#         "endereco": (endereco or "").strip(),
+#         "bairro": (bairro or "").strip(),
+#     }
+#     # apenas campos com valor não-vazio
+#     campos_texto_ordenados = [
+#         k for k, _ in sorted(
+#             [(k, pesos.get(k, 0.0)) for k, v in valores.items() if v],
+#             key=lambda x: x[1],
+#             reverse=True,
+#         )
+#     ]
+
+#     # 3) Construir cláusulas "should" na ordem dos pesos
+#     should = []
+#     def _add_text_clauses(field_name: str, value: str, w: float):
+#         # Ajuste os campos do índice conforme seu mapping
+#         es_field = "endereco_normalizado" if field_name == "endereco" else "bairro_normalizado"
+#         # match com fuzziness + phrase para dar bônus extra quando a ordem bate
+#         should.append({"match": {es_field: {"query": value, "fuzziness": "AUTO", "boost": w}}})
+#         should.append({"match_phrase": {es_field: {"query": value, "slop": 2, "boost": w * 0.5}}})
+
+#     for k in campos_texto_ordenados:
+#         _add_text_clauses(k, valores[k], pesos.get(k, 0.0))
+
+#     # se nenhum campo textual veio, usa match_all
+#     base_query = {"bool": {"should": should, "minimum_should_match": 1}} if should else {"match_all": {}}
+
+#     # 4) Bonus de proximidade do número via function_score (peso = pesos["numero"])
+#     numero_int = None
+#     if numero is not None:
+#         try:
+#             numero_int = int(str(numero).strip())
+#         except ValueError:
+#             numero_int = None
+
+#     query = base_query
+#     if numero_int is not None and pesos.get("numero", 0.0) > 0:
+#         query = {
+#             "function_score": {
+#                 "query": base_query,
+#                 "functions": [
+#                     {
+#                         "gauss": {
+#                             numero_field: {
+#                                 "origin": numero_int,
+#                                 "scale": gauss_scale,
+#                                 "decay": gauss_decay,
+#                             }
+#                         },
+#                         "weight": pesos["numero"],
+#                     }
+#                 ],
+#                 "score_mode": "sum",
+#                 "boost_mode": "sum",
+#             }
+#         }
+
+#     # 5) Montar corpo da busca (com collapse opcional)
+#     body = {"query": query, "size": size, "track_total_hits": True}
+#     if collapse_on_code:
+#         body["collapse"] = {"field": "original_index"}  # troque se seu campo for outro
+
+#     res = es.search(index=index_name, **body)
+#     hits = res.get("hits", {}).get("hits", [])
+
+#     if not hits:
+#         return []
+
+#     # 6) Retorno (com score bruto ou % normalizada)
+#     if normalize_score_pct and size > 1:
+#         top = hits[0].get("_score") or 1.0
+#         out = []
+#         for h in hits:
+#             s = h.get("_source", {})
+#             out.append((
+#                 s.get("endereco_normalizado", ""),
+#                 s.get("bairro_normalizado", ""),
+#                 (h.get("_score", 0.0) / top) * 100.0,
+#                 s.get("original_index"),
+#             ))
+#         return out
+#     else:
+#         # padrão: só o top-1 com score bruto
+#         h0 = hits[0]; s0 = h0.get("_source", {})
+#         return [(
+#             s0.get("endereco_normalizado", ""),
+#             s0.get("bairro_normalizado", ""),
+#             h0.get("_score", 0.0),
+#             s0.get("original_index"),
+#         )]
+
+import re
+import difflib
+import unicodedata
+
+def _normalize_ascii(s: str) -> str:
+    s = str(s or "")
+    s = unicodedata.normalize("NFKD", s)
+    s = "".join(ch for ch in s if not unicodedata.combining(ch))
+    s = s.lower().strip()
+    s = re.sub(r"\s+", " ", s)
+    return s
+
 def buscar_similares_elasticsearch(
     es,
     endereco: str | None,
@@ -178,12 +421,24 @@ def buscar_similares_elasticsearch(
     numero: str | int | None = None,
     w_endereco: float = 3.0,
     w_bairro: float = 1.0,
-    w_numero: float = 0.3,          # peso do número (bônus baixo)
-    numero_field: str = "numero",  # CAMPO NUMÉRICO (long)
-    gauss_scale: float = 2.0,       # quão “perto” conta muito (≈ metade do bônus em ±scale)
-    gauss_decay: float = 0.5,       # quanto decai na distância=scale
-    collapse_on_code: bool = True
+    w_numero: float = 0.3,          # peso do número (bônus)
+    numero_field: str = "numero",   # CAMPO NUMÉRICO (long)
+    gauss_scale: float = 2.0,
+    gauss_decay: float = 0.5,
+    collapse_on_code: bool = True,
+
+    # ---- novos parâmetros para a regra pedida ----
+    numero_tol: int = 0,            # 0 = exige número igual; 1/2/3 = aceita proximidade
+    bairro_ratio_min: float = 0.85, # 0..1 — similaridade mínima do bairro
+    k_eval: int = 10,               # quantos hits inspecionar antes do fallback
 ):
+    """
+    Prioridade controlada por w_endereco > w_numero > w_bairro, MAS:
+    se NENHUM dos top-K tiver (numero similar OU bairro similar), então
+    cai em fallback: força o match de endereco e escolhe o documento com
+    numero mais próximo numericamente.
+    """
+
     def _wrap_num_proximity(query, numero_int):
         # Aplica bônus por proximidade do número (gauss)
         return {
@@ -212,6 +467,27 @@ def buscar_similares_elasticsearch(
             body["collapse"] = {"field": "original_index"}
         return es.search(index=index_name, **body)
 
+    def _fallback_by_nearest_number(endereco_in: str, numero_int: int):
+        must_endereco = {"match": {"endereco_normalizado": {"query": endereco_in, "operator": "and"}}} if endereco_in else {"match_all": {}}
+        body = {
+            "query": {"bool": {"must": [must_endereco]}},
+            "size": 1,
+            "track_total_hits": True,
+            "sort": [{
+                "_script": {
+                    "type": "number",
+                    "script": {
+                        "source": "Math.abs(doc[params.f].value - params.target)",
+                        "params": {"f": numero_field, "target": numero_int}
+                    },
+                    "order": "asc"
+                }
+            }]
+        }
+        if collapse_on_code:
+            body["collapse"] = {"field": "original_index"}
+        return es.search(index=index_name, **body)
+
     # parse do número para inteiro (só aplica proximidade se der)
     numero_int = None
     if numero is not None:
@@ -220,7 +496,7 @@ def buscar_similares_elasticsearch(
         except ValueError:
             numero_int = None  # ignora proximidade se não for inteiro
 
-    # --- Tentativa 1: should com boosts individuais ---
+    # --- Tentativa 1: should com boosts individuais (rua > num > bairro)
     should = []
     if endereco:
         should.append({"match": {"endereco_normalizado": {"query": endereco, "fuzziness": "AUTO", "boost": w_endereco}}})
@@ -230,56 +506,65 @@ def buscar_similares_elasticsearch(
 
     base_query = {"bool": {"should": should, "minimum_should_match": 1}} if should else {"match_all": {}}
     query1 = _wrap_num_proximity(base_query, numero_int) if numero_int is not None else base_query
-    res = _search(query1)
+
+    # pegue mais de 1 resultado para avaliar a condição (k_eval)
+    res = _search(query1, size=max(1, k_eval))
     hits = res.get("hits", {}).get("hits", [])
 
-    # --- Tentativa 2: cross_fields (endereco+bairro combinados)
-    if not hits and endereco and bairro:
-        combined = f"{endereco} {bairro}"
-        base2 = {
-            "multi_match": {
-                "query": combined,
-                "type": "cross_fields",
-                "fields": [f"endereco_normalizado^{w_endereco}", f"bairro_normalizado^{w_bairro}"],
-                "operator": "OR"
-            }
-        }
-        query2 = _wrap_num_proximity(base2, numero_int) if numero_int is not None else base2
-        res = _search(query2)
-        hits = res.get("hits", {}).get("hits", [])
+    # --------- checagem dos critérios (numero/bairro "similares") ----------
+    def _tem_numero_similar(_hits) -> bool:
+        if numero_int is None:
+            return False
+        for h in _hits:
+            s = h.get("_source", {})
+            if s is None or numero_field not in s or s[numero_field] in (None, ""):
+                continue
+            try:
+                n = int(s[numero_field])
+            except Exception:
+                continue
+            if abs(n - numero_int) <= max(0, int(numero_tol)):
+                return True
+        return False
 
-    # --- Tentativa 3: most_fields (mais permissivo)
-    if not hits and (endereco or bairro):
-        combined = " ".join([x for x in [endereco, bairro] if x])
-        base3 = {
-            "multi_match": {
-                "query": combined,
-                "type": "most_fields",
-                "fields": [f"endereco_normalizado^{w_endereco}", f"bairro_normalizado^{w_bairro}"],
-            }
-        }
-        query3 = _wrap_num_proximity(base3, numero_int) if numero_int is not None else base3
-        res = _search(query3)
-        hits = res.get("hits", {}).get("hits", [])
+    def _tem_bairro_similar(_hits) -> bool:
+        if not bairro:
+            return False
+        b_norm = _normalize_ascii(bairro)
+        for h in _hits:
+            s = h.get("_source", {})
+            cand = _normalize_ascii(s.get("bairro_normalizado", "")) if s else ""
+            if not cand:
+                continue
+            if difflib.SequenceMatcher(None, b_norm, cand).ratio() >= bairro_ratio_min:
+                return True
+        return False
 
-    # --- Último recurso: usa match_all mas ainda prioriza número próximo (se houver)
+    tem_numero = _tem_numero_similar(hits)
+    tem_bairro = _tem_bairro_similar(hits)
+
+    # --------- se falhou ambos, aplica fallback: número mais próximo ----------
+    if not tem_numero and not tem_bairro and numero_int is not None:
+        res_fb = _fallback_by_nearest_number(endereco or "", numero_int)
+        fb_hits = res_fb.get("hits", {}).get("hits", [])
+        if fb_hits:
+            h = fb_hits[0]; s = h.get("_source", {})
+            return [(
+                s.get("endereco_normalizado", ""),
+                s.get("bairro_normalizado", ""),
+                h.get("_score", 0.0),  # score aqui não representa distância; é ok
+                s.get("original_index"),
+            )]
+
+    # --------- caso padrão: devolve top-1 da busca original ----------
     if not hits:
-        base4 = {"match_all": {}}
-        query4 = _wrap_num_proximity(base4, numero_int) if numero_int is not None else base4
-        res = _search(query4, size=1)
-        hits = res.get("hits", {}).get("hits", [])
-        if not hits:
-            return [(None, None, 0.0, None)]
-        h = hits[0]; s = h.get("_source", {})
-        return [(s.get("endereco_normalizado", ""), s.get("bairro_normalizado", ""), 0.0, s.get("original_index"))]
-
-    # --- Normaliza pelo melhor score
+        return [(None, None, 0.0, None)]
     h0 = hits[0]; s0 = h0.get("_source", {})
     top = (h0.get("_score") or 1.0)
     return [(
         s0.get("endereco_normalizado", ""),
         s0.get("bairro_normalizado", ""),
-        (h0.get("_score", 0.0) / top) * 100.0,
+        (h0.get("_score", 0.0) / top) * 100.0,  # normalizado em %
         s0.get("original_index"),
     )]
 
@@ -291,6 +576,17 @@ def possivel_bairro_diferente(bairro1, bairro2, score_final, penalizacao=0.95):
     if bairro1 != bairro2:  # se o último token for diferente -> provável bairro diferente
         return score_final * penalizacao
     return score_final
+
+# remove o ultimo caracter de todos os dados da coluna
+def remove_ultimo_caracter(df, coluna):
+    # usa dtype "string" para preservar NA corretamente nas operações .str
+    s = df[coluna].astype("string")
+    ultimo = s.str[-1]                         # último caractere de cada célula
+    mask = ultimo.str.fullmatch(r'[A-Za-z]')  # True se letra ASCII
+
+    out = df.copy()
+    out.loc[mask.fillna(False), coluna] = s.loc[mask].str[:-1]
+    return out
 
 def comparar_enderecos_es(df1, df2, colunas1, colunas2, coluna_bairro_arquivo1, coluna_bairro_arquivo2,
                           col_num1=None, col_num2=None,
@@ -305,6 +601,11 @@ def comparar_enderecos_es(df1, df2, colunas1, colunas2, coluna_bairro_arquivo1, 
     df2["endereco_normalizado"] = montar_endereco(df2, colunas2, excluir_col_num=col_num2)
     df2["bairro_normalizado"] = montar_bairro(df2, coluna_bairro_arquivo2)
 
+    # se o codigo do setor conter letra no ultimo caracter ele remove
+    df1 = remove_ultimo_caracter(df1, "CD_SETOR")
+    df2 = remove_ultimo_caracter(df2, "COD_SETOR")
+
+
     es = indexar_enderecos_elasticsearch(df2, index_name=index_name)
     time.sleep(1)  # Espera para o índice estar pronto
 
@@ -317,7 +618,24 @@ def comparar_enderecos_es(df1, df2, colunas1, colunas2, coluna_bairro_arquivo1, 
         num1 = df1.loc[idx1, col_num1] if col_num1 else None
         num1_int = try_int(num1)
 
-        similares = buscar_similares_elasticsearch(es, endereco1, bairro1, index_name, num1_int)
+        # similares = buscar_similares_elasticsearch(es, endereco1, bairro1, index_name, num1_int)
+        # similares = buscar_similares_elasticsearch(es, endereco1, bairro1, index_name, num1_int, {"endereco": 5.0, "bairro": 0.2, "numero": 1.0}, size=1)
+        similares = buscar_similares_elasticsearch(
+            es,
+            endereco1,
+            bairro1,
+            index_name,
+            num1_int,
+
+            # seus pesos (número > bairro)
+            w_endereco=5.0, w_bairro=0.2, w_numero=1.0,
+
+            # regra nova:
+            numero_tol=0,          # exige número igual (0). Se quiser aceitar +/-2, mande numero_tol=2
+            bairro_ratio_min=0.85, # ajuste conforme seus dados
+            k_eval=10              # avalia os 10 melhores antes de decidir o fallback
+        )
+
 
         matches_final = []
         
@@ -336,7 +654,9 @@ def comparar_enderecos_es(df1, df2, colunas1, colunas2, coluna_bairro_arquivo1, 
             if score_numero is None:
                 score_final = score_texto_raw
             else:
-                score_final = score_texto_raw * peso_texto + score_numero * peso_numero
+                # score_final = score_texto_raw * peso_texto + score_numero * peso_numero
+                score_final = (score_texto_raw or 0.0) * (peso_texto or 0.0) + (score_numero or 0.0) * (peso_numero or 0.0)
+
             score_final = possivel_bairro_diferente(bairro1, bairro2_texto, score_final)
             matches_final.append((idx2, score_texto_raw, score_numero, score_final))
         # Ordena pelo score final
@@ -356,6 +676,11 @@ def comparar_enderecos_es(df1, df2, colunas1, colunas2, coluna_bairro_arquivo1, 
                 f"{endereco_original} {numero} | Score Final: {score_final_str}"
             )
         
+       
+        coordenada1 = (float(df1.loc[idx1, "nova_lat"]), float(df1.loc[idx1, "nova_long"]))
+        coordenada2 = (float(df2.loc[idx1, "LATITUDE"]), float(df2.loc[idx1, "LONGITUDE"]))
+        
+        
         # Armazena o resultado no DataFrame final
         resultados.append({
             "idx_df1": idx1,
@@ -366,12 +691,18 @@ def comparar_enderecos_es(df1, df2, colunas1, colunas2, coluna_bairro_arquivo1, 
             "endereco_df2": formatar_endereco(df2.iloc[idx2], colunas2),
             "bairro_df2": formatar_endereco(df2.loc[idx2], [coluna_bairro_arquivo2]),
             "numero_df2": df2.loc[idx2, col_num2] if col_num2 else None,
-            "similaridade_texto": round(score_texto, 2),
+            "similaridade_texto": None if score_texto is None else round(score_texto, 2),
             "similaridade_numero": round(score_numero, 2) if score_numero is not None else None,
             "similaridade_final": round(melhor_score_final, 2) if melhor_score_final is not None else None,
             "sugestoes_topN": "; ".join(sugestoes_formatadas),
             "setor_df1": df1.loc[idx1, "CD_SETOR"],
-            "setor_df2": df2.loc[idx2, "COD_SETOR"]
+            "setor_df2": df2.loc[idx2, "COD_SETOR"],
+            "mesmo_setor": 'SIM' if df1.at[idx1, 'CD_SETOR'] == df2.at[idx2, 'COD_SETOR'] else 'NAO',
+            "latitude_df1": df1.loc[idx1, "nova_lat"],
+            "longitude_df1": df1.loc[idx1, "nova_long"],
+            "latitude_df2": df2.loc[idx1, "LATITUDE"],
+            "longitude_df2": df2.loc[idx1, "LONGITUDE"],
+            "distancia": geodesic(coordenada1, coordenada2).meters
         })
 
 
