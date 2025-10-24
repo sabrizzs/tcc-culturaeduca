@@ -149,7 +149,7 @@ def comparar(df1: pd.DataFrame, df2: pd.DataFrame,
              colunas_logradouro1: list, colunas_logradouro2: list,
              col_num1: str = None, col_num2: str = None,
              col_bairro1: str = None, col_bairro2: str = None,
-             algoritmo: str = "rapidfuzz", **kwargs) -> pd.DataFrame:
+             algoritmo: str = "llm", **kwargs) -> pd.DataFrame:
     """
     Função principal para comparar endereços
     - df1, df2: DataFrames

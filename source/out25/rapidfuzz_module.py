@@ -13,15 +13,29 @@ def executar_rapidfuzz(df1, df2,
     limiar_similaridade = kwargs.get("limiar_similaridade", 85)
 
     """
-    Compara endereços usando RapidFuzz.
-    Recebe DataFrames já carregados, mas aplica normalização de logradouro e bairro.
-    Retorna DataFrame padronizado com melhores matches e top N sugestões.
+    Compara endereços usando a biblioteca RapidFuzz.
+
+    - O RapidFuzz calcula a similaridade entre textos com base na 
+      semelhança de caracteres (distância de Levenshtein).  
+      Exemplo: "Rua das Flores" ≈ "Rua das Flôres" ≈ "R das Flores".
+
+    - Cada texto recebe uma pontuação de 0 a 100, onde 100 significa
+      idêntico e 0 totalmente diferente.
+
+    - O algoritmo combina três critérios:
+        - Nome da rua (logradouro)
+        - Número do endereço (comparado numericamente)
+        - Bairro (comparado textualmente)
+
+    Retorna:
+        Um DataFrame com os melhores matches e as top N sugestões.
     """
 
+    # Cria cópias das tabelas originais
     df1 = df1.copy()
     df2 = df2.copy()
 
-    # Normalização de logradouro e bairro
+    # Normaliza os endereços
     df1["logradouro_normalizado"] = montar_logradouro(df1, colunas_logradouro1, excluir_col_num=col_num1)
     df2["logradouro_normalizado"] = montar_logradouro(df2, colunas_logradouro2, excluir_col_num=col_num2)
 
@@ -31,6 +45,10 @@ def executar_rapidfuzz(df1, df2,
     resultados = []
 
     def try_int(n):
+        """
+        Tenta converter um valor em número inteiro.
+        Retorna None se não for possível (exemplo: texto vazio).
+        """
         if pd.isna(n):
             return None
         try:
@@ -38,8 +56,12 @@ def executar_rapidfuzz(df1, df2,
         except:
             return None
 
+    # Loop principal: compara cada endereço de df1 com todos de df2
     for idx1, endereco1 in df1["logradouro_normalizado"].items():
 
+        # process.extract faz a comparação fuzzy entre uma string e
+        # uma lista de strings, retornando uma lista de matches com:
+        # (texto_comparado, pontuação, índice_no_df2)
         matches_all = process.extract(
             endereco1,
             df2["logradouro_normalizado"],
@@ -51,11 +73,14 @@ def executar_rapidfuzz(df1, df2,
         bairro1 = df1.loc[idx1, "bairro_normalizado"]
 
         matches_final = []
+
+        # Para cada possível correspondência encontrada:
+        # calcula a pontuação detalhada e o score final
         for log2_texto, score_log, idx2 in matches_all:
             num2_int = try_int(df2.loc[idx2, col_num2]) if col_num2 else None
             bairro2 = df2.loc[idx2, "bairro_normalizado"]
 
-            # Similaridade numérica
+            # O número do endereço é comparado de forma quantitativa
             if num1_int is not None and num2_int is not None:
                 diff = abs(num1_int - num2_int)
                 score_num = 100 if diff == 0 else max(0, 100 * (1 - diff / max(num1_int, num2_int)))
@@ -65,7 +90,7 @@ def executar_rapidfuzz(df1, df2,
             # Similaridade bairro
             score_bairro = fuzz.token_set_ratio(bairro1, bairro2) if bairro1 or bairro2 else None
 
-            # Score final ponderado
+            # Soma ponderada dos scores
             score_final = (
                 score_log * peso_logradouro +
                 (score_num if score_num is not None else score_log) * peso_numero +
@@ -74,12 +99,14 @@ def executar_rapidfuzz(df1, df2,
 
             matches_final.append((idx2, score_log, score_num, score_bairro, score_final))
 
-        # Ordena
+        # Ordena os candidatos e escolhe o melhor match
         matches_final.sort(key=lambda x: x[4], reverse=True)
 
-        # Override para número exato
+        # Override para número exato:
+        # se houver número exato (100%), prioriza esse
+        # Isso ajuda a corrigir casos de ruas iguais com números diferentes.
         preferir_numero_exato = True
-        margem_override = 8
+        margem_override = 8 # tolerância para substituir o melhor caso
         if preferir_numero_exato:
             candidatos_exatos = [m for m in matches_final if m[2] == 100]
             if candidatos_exatos:
@@ -92,7 +119,7 @@ def executar_rapidfuzz(df1, df2,
         # Melhor match
         idx2, score_log, score_num, score_bairro, melhor_final = matches_final[0]
 
-        # Top N sugestões
+        # Monta uma lista de sugestões (top N endereços mais parecidos)
         sugestoes_formatadas = []
         for idx2_sug, sc_log, sc_num, sc_bai, sc_final in matches_final[:top_n]:
             endereco_original = formatar_endereco(
@@ -102,6 +129,7 @@ def executar_rapidfuzz(df1, df2,
             numero = df2.loc[idx2_sug, col_num2] if col_num2 else ""
             sugestoes_formatadas.append(f"{endereco_original} {numero} | Score Final: {sc_final:.0f}")
 
+        # Salva o resultado consolidado
         resultados.append({
             "idx_df1": idx1,
             "endereco_df1": formatar_endereco(df1.loc[idx1], colunas_logradouro1 + ([col_bairro1] if col_bairro1 else [])),
