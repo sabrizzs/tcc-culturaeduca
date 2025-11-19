@@ -103,9 +103,6 @@ def executar_llm(
         mask = cos_scores >= (max_score - tol)
         idxs_candidatos = torch.nonzero(mask).flatten().tolist()
 
-        # Ordena os índices dos endereços de df2 do mais parecido para o menos parecido
-        ### indices_ordenados = torch.argsort(cos_scores, descending=True)
-
         # Extrai número e bairro do endereço atual de df1
         num1_int = try_int(df1.loc[idx1, col_num1]) if col_num1 else None
         bairro1 = df1.loc[idx1, "bairro_normalizado"]
@@ -156,7 +153,6 @@ def executar_llm(
 
         # Override para número exato:
         # se houver número exato (100%), prioriza esse
-        # Isso ajuda a corrigir casos de ruas iguais com números diferentes.
         preferir_numero_exato = True
         margem_override = 8  # tolerância
         if preferir_numero_exato:

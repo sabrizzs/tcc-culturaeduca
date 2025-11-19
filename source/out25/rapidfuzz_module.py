@@ -104,7 +104,6 @@ def executar_rapidfuzz(df1, df2,
 
         # Override para número exato:
         # se houver número exato (100%), prioriza esse
-        # Isso ajuda a corrigir casos de ruas iguais com números diferentes.
         preferir_numero_exato = True
         margem_override = 8 # tolerância para substituir o melhor caso
         if preferir_numero_exato:
