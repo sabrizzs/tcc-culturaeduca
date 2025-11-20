@@ -23,3 +23,17 @@ venv/
 .env
 
 source/ago25/elasticsearch/teste.ipynb
+
+# datasets muito grandes
+source/nov25/api/datasets/
+
+source/nov25/api/venv311/
+
+source/nov25/api/datasets_normalizados/
+source/nov25/api/results/
+
+.vscode/launch.json
+
+results/result_rapidfuzz/result_diadema_20251119_000700.csv
+
+source/nov25/api/3513801_DIADEMA.csv
