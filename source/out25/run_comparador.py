@@ -20,7 +20,9 @@ Responsabilidades:
 
 # Arquivos de entrada
 arquivo1 = "cnes_geo_padrao_ouro_diadema.csv"
-arquivo2 = "3513801_DIADEMA.csv"
+# arquivo2 = "3513801_DIADEMA.csv"
+arquivo2_diadema = "3513801_DIADEMA.csv"
+arquivo2_sbc = "3548708_SAO_BERNARDO_DO_CAMPO.csv"
 
 # Colunas
 colunas_logradouro_arquivo1 = ["NO_LOGRADO"]
@@ -47,10 +49,17 @@ pesos = {
 # -------------------
 
 start_time = time.time()
+start_datetime = datetime.now()
+print(f"Comparação iniciada em: {start_datetime.strftime('%Y-%m-%d %H:%M:%S')}")
 
 # Carrega dados
 df1 = pd.read_csv(arquivo1, sep=";", dtype=str)
-df2 = pd.read_csv(arquivo2, sep=";", dtype=str)
+#df2 = pd.read_csv(arquivo2, sep=";", dtype=str)
+
+# Carrega bases de logradouro (Diadema + SBC)
+df2_diadema = pd.read_csv(arquivo2_diadema, sep=";", dtype=str)
+df2_sbc = pd.read_csv(arquivo2_sbc, sep=";", dtype=str)
+df2 = pd.concat([df2_diadema, df2_sbc], ignore_index=True)
 
 # Converte números para inteiro
 df1["numero_logradouro"] = df1[coluna_numero_arquivo1].apply(try_int)
@@ -105,5 +114,8 @@ with pd.ExcelWriter(caminho_arquivo, engine="xlsxwriter") as writer:
     df_resumo.to_excel(writer, sheet_name="Resumo similaridade", index=False)
 
 elapsed = time.time() - start_time
+end_datetime = datetime.now()
+
+print(f"Comparação finalizada em: {end_datetime.strftime('%Y-%m-%d %H:%M:%S')}")
 print(f"Comparação concluída e arquivo salvo em {caminho_arquivo}.")
 print(f"Tempo de execução: {elapsed:.2f} segundos.")

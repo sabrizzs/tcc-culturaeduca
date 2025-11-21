@@ -3,6 +3,8 @@ import pandas as pd
 import unidecode
 from num2words import num2words
 import re
+import time
+import os
 
 """
 comparador.py - Núcleo de preparação de endereços
@@ -159,9 +161,16 @@ def comparar(df1: pd.DataFrame, df2: pd.DataFrame,
     - algoritmo: 'rapidfuzz' ou 'llm'
     - kwargs: parâmetros específicos do algoritmo
     """
+
+    start_time = time.time()
+
     # Prepara DataFrames
     df1_preparado = preparar_dataframe(df1, colunas_logradouro1, col_num1, col_bairro1)
     df2_preparado = preparar_dataframe(df2, colunas_logradouro2, col_num2, col_bairro2)
+
+    elapsed = time.time() - start_time
+    print(f"Normalização de dados concluída.")
+    print(f"Tempo de execução: {elapsed:.2f} segundos.")
 
     # Chama o algoritmo escolhido
     if algoritmo == "rapidfuzz":
@@ -194,5 +203,5 @@ def comparar(df1: pd.DataFrame, df2: pd.DataFrame,
         )
 
     else:
-        raise ValueError("Algoritmo inválido. Escolha 'rapidfuzz' ou 'llm'.")
+        raise ValueError("Algoritmo inválido. Escolha 'rapidfuzz' ou 'llm' ou 'elasticsearch.")
 
