@@ -213,6 +213,7 @@ def executar_rapidfuzz(
     # Função que processa UMA linha de df1
     # --------------------------
     def processar_linha(idx1):
+        print(f"processando linha {idx1}")
         endereco1 = df1.at[idx1, colunas_logradouro1]
         bairro1 = df1.at[idx1, col_bairro1]
         num1_int = try_int(df1.at[idx1, col_num1]) if col_num1 else None

@@ -530,6 +530,7 @@ def executar_elasticsearch(df1, df2,
     df1 = df1.where(pd.notna(df1), None) # substiui as colunas NaN por None
 
     for idx1, row in df1.iterrows():
+        print(f'linhas {idx1}')
         endereco1 = row[colunas_logradouro1]
         bairro1 = row[col_bairro1] if col_bairro1 else None
         num1 = df1.loc[idx1, col_num1] if col_num1 else None

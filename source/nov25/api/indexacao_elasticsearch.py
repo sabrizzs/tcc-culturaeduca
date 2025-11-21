@@ -15,7 +15,7 @@ Responsabilidades:
 # Configurações do usuário - Dados de Entrada
 # -------------------
 
-arquivo_cnefe_normalizado = "/home/samantha/tcc-culturaeduca/source/nov25/api/datasets_normalizados/normalizado_roraima_cnefe.csv" # dados dos arquivos do cnefe
+arquivo_cnefe_normalizado = "/home/samantha/tcc-culturaeduca/source/nov25/api/datasets_normalizados/normalizado_sao_paulo_cnefe.csv" # dados dos arquivos do cnefe
 ELASTICSEARCH_PW = "HO2Vv2MWa=jTr-EHSmEt" # chave do elasticsearch
 
 # -------------------
@@ -62,6 +62,7 @@ def indexar_enderecos_elasticsearch(
 
         actions = []
         for i, row in df.iterrows():
+            print(f'linha {i}')
             # logradouro e bairro sem NaN
             logradouro = safe_str(row[col_logradouro])
             bairro = safe_str(row[col_bairro])

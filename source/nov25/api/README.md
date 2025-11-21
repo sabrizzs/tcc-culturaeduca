@@ -54,7 +54,7 @@ pip uninstall elasticsearch elastic-transport -y
 pip install "elasticsearch<9,>=8.0.0"
 ```
 
-### Para a execução do LLM
+### Para a execução do LLM (temporario)
 
 É necessário trocar o ambiente virtual, pois ele roda apenas com python 3.11. Para isso é necessário seguir os seguintes passos:
 
@@ -72,4 +72,30 @@ cd ~/tcc-culturaeduca/source/nov25/api/
 source venv311/bin/activate
 
 python run_comparador.py
+```
+
+## Como executar o código:
+
+### Normalização dos arquivos:
+
+deixe @{arquivo_parametros_de_entrada txt}
+
+```bash
+python run_normalizacao.py @input_normalizacao_cnefe.txt
+```
+
+### Indexação ElaticSearch
+
+precisa modificar as variaveis dentro do arquivo
+
+```bash
+python run_indexacao_elasticsearch.py
+```
+
+### Execução da geocodificação
+
+deixe @{arquivo_parametros_de_entrada txt}
+
+```bash
+python run_comparador.py @entrada.txt
 ```

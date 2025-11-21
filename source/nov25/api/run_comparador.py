@@ -121,7 +121,9 @@ start_time = time.time()
 
 # Carrega dados
 df1 = pd.read_csv(arquivo_entrada, sep=sep_arq_entrada, dtype=str)
+print("carregou dados de entrada")
 df2 = pd.read_csv(arquivo_base_cnefe, sep=sep_arq_cnefe, dtype=str)
+print("carregou dados do cnefe")
 
 # Executa a comparação
 df_resultados = comparar(

@@ -4,11 +4,6 @@ import pandas as pd
 # Raio médio da Terra em metros (similar ao usado em ST_DistanceSphere)
 R = 6371008.8
 
-import numpy as np
-import pandas as pd
-
-R = 6371008.8  # raio médio da Terra em metros
-
 def haversine_series(lat1, lon1, lat2, lon2):
     # garante que tudo é numérico (float), valores inválidos viram NaN
     lat1 = pd.to_numeric(lat1, errors="coerce")
@@ -30,7 +25,7 @@ def haversine_series(lat1, lon1, lat2, lon2):
     return R * c  # distância em metros
 
 
-df_res= pd.read_csv("/home/samantha/tcc-culturaeduca/source/nov25/api/results/result_rapidfuzz/result_roraima_20251120_131821.csv", sep=";", dtype=str)
+df_res= pd.read_csv("/home/samantha/tcc-culturaeduca/source/nov25/api/results/result_elasticsearch/result_sao_paulo_20251121_142418.csv", sep=";", dtype=str)
 
 # calcula a distância linha a linha (vetorizado, rápido)
 df_res["desvio_metros"] = haversine_series(
@@ -40,4 +35,4 @@ df_res["desvio_metros"] = haversine_series(
     df_res["longitude_resultante"],
 )
 
-df_res.to_csv("/home/samantha/tcc-culturaeduca/source/nov25/api/results/result_rapidfuzz/resultado_roraima_com_desvio1.csv", index=False, sep=";")
+df_res.to_csv("/home/samantha/tcc-culturaeduca/source/nov25/api/results/result_elasticsearch/result_elasticsearch_mun_sp_com_desvio.csv", index=False, sep=";")
