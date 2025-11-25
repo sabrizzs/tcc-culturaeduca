@@ -81,8 +81,8 @@ def executar_llm(
 
     # Gera os embeddings (vetores numéricos) para os logradouros
     # Quanto mais próximos dois vetores, mais semelhantes são os textos.
-    emb1 = model.encode(df1["logradouro_normalizado"].tolist(), convert_to_tensor=True, show_progress_bar=True)
-    emb2 = model.encode(df2["logradouro_normalizado"].tolist(), convert_to_tensor=True, show_progress_bar=True)
+    emb1 = model.encode(df1["logradouro_normalizado"].tolist(), convert_to_tensor=True, show_progress_bar=False)
+    emb2 = model.encode(df2["logradouro_normalizado"].tolist(), convert_to_tensor=True, show_progress_bar=False)
 
     emb_bairros1 = model.encode(df1["bairro_normalizado"].tolist(), convert_to_tensor=True)
     emb_bairros2 = model.encode(df2["bairro_normalizado"].tolist(), convert_to_tensor=True)

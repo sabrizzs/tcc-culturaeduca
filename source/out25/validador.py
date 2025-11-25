@@ -7,8 +7,7 @@ CAMINHO_GABARITO = "results/result_rapidfuzz/result_20251012_142504_analisado_ga
 
 # Arquivo NOVO de resultados que você quer validar
 # (o que o run_comparador gerou, dentro de results/result_llm/)
-CAMINHO_RESULTADO_NOVO = r"results\result_llm\result_20251119_222412.xlsx"  # <<< troque aqui
-
+CAMINHO_RESULTADO_NOVO = r"results\result_llm\result_20251125_111509.xlsx"  # <<< troque aqui
 
 # Nome da planilha dentro do arquivo novo (run_comparador usa "Enderecos")
 SHEET_RESULTADO_NOVO = "Enderecos"
