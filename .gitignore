@@ -38,4 +38,8 @@ results/result_rapidfuzz/result_diadema_20251119_000700.csv
 
 source/nov25/api/3513801_DIADEMA.csv
 
-source/nov25/api/teste/
+source/nov25/api/teste/1_normalizacao/datasets_normalizados_atual
+
+source/nov25/api/teste/4_resultados/result_elasticsearch
+
+source/nov25/api/teste/4_resultados/result_rapidfuzz
