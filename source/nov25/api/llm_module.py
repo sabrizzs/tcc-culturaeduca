@@ -1,5 +1,6 @@
 import pandas as pd
 import torch
+import hnswlib
 from sentence_transformers import SentenceTransformer, util
 from comparador import formatar_endereco
 
@@ -31,6 +32,7 @@ def try_int(n):
         return None
     
 def limpar_bairro_llm(b):
+    b = "" if pd.isna(b) else str(b).lower()
     for termo in ["jardim", "jd", "vila", "vl", "bairro", "jd.", "vl.", "pq.", "parque"]:
         b = b.replace(termo, "")
     return b.strip()
@@ -93,6 +95,13 @@ def executar_llm(
         device=device
     )
 
+    # HNSWLIB
+    dim = emb2.shape[1]
+    index = hnswlib.Index(space='cosine', dim=dim)
+    index.init_index(max_elements=len(emb2), ef_construction=200, M=16)
+    index.add_items(emb2.cpu().numpy(), list(range(len(emb2))))
+    index.set_ef(200)  # precisão durante consulta
+
     emb_bairros1 = model.encode(df1["bairro_normalizado"].tolist(), convert_to_tensor=True)
     emb_bairros2 = model.encode(df2["bairro_normalizado"].tolist(), convert_to_tensor=True)
 
@@ -101,16 +110,24 @@ def executar_llm(
     # Loop principal: compara cada endereço de df1 com todos de df2
     for idx1, _ in enumerate(df1["logradouro_normalizado"]):
 
-        # Calcula a similaridade entre o embedding do endereço de df1
-        # e todos os embeddings de df2, usando "cosine similarity".
-        # Essa medida vai de 0 (muito diferente) a 1 (muito parecido).
-        cos_scores = util.cos_sim(emb1[idx1], emb2)[0]
+        # HNSW ANN
+        # busca k vizinhos
+        k = max(50, top_n * 10)
+        vizinhos, distancias = index.knn_query(emb1[idx1].cpu().numpy(), k=k)
+
+        # converte distância -> similaridade
+        cos_scores = 1 - distancias[0]
+        candidatos = vizinhos[0]
 
         # pega todos os candidatos que estão praticamente empatados com o melhor
-        max_score = float(cos_scores.max().item())
+        max_score = float(cos_scores.max())
         tol = float(kwargs.get("tolerancia_logradouro", 0.001))  # 0.1% de tolerância por padrão
-        mask = cos_scores >= (max_score - tol)
-        idxs_candidatos = torch.nonzero(mask).flatten().tolist()
+
+        idxs_candidatos = [
+            candidatos[i]
+            for i in range(len(candidatos))
+            if cos_scores[i] >= (max_score - tol)
+        ]
 
         # Extrai número e bairro do endereço atual de df1
         num1_int = try_int(df1.loc[idx1, col_num1]) if col_num1 else None
@@ -119,8 +136,9 @@ def executar_llm(
         matches_final = []
 
         # Para cada endereço candidato (df2), calcula as pontuações
-        for idx2 in idxs_candidatos:
-            score_log = float(cos_scores[idx2].item()) * 100  # 0..100
+        for pos, idx2 in enumerate(idxs_candidatos):
+
+            score_log = float(cos_scores[pos]) * 100  # 0..100
             num2_int = try_int(df2.loc[idx2, col_num2]) if col_num2 else None
             bairro2 = df2.loc[idx2, "bairro_normalizado"]
 

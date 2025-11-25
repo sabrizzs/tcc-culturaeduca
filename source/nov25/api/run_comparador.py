@@ -1,6 +1,6 @@
 # run_comparador.py
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 from comparador import comparar
 import time
 import os
@@ -118,6 +118,8 @@ pesos = {
 # -------------------
 
 start_time = time.time()
+inicio = datetime.now()
+print("Início da execução:", inicio.strftime("%Y-%m-%d %H:%M:%S"))
 
 # Carrega dados
 df1 = pd.read_csv(arquivo_entrada, sep=sep_arq_entrada, dtype=str)
@@ -184,4 +186,4 @@ df_resumo.to_csv(arquivo_resumo, index=False, sep=";")
 elapsed = time.time() - start_time
 print(f"CSV de resultados salvo em: {arquivo_resultados}")
 print(f"CSV de resumo salvo em: {arquivo_resumo}")
-print(f"Tempo de execução: {elapsed:.2f} segundos.")
+print("Tempo de execução:", str(timedelta(seconds=int(elapsed))))
