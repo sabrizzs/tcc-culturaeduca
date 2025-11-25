@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 # df= pd.read_csv("/home/samantha/tcc-culturaeduca/source/nov25/api/results/result_geocodebr/result_geocodebr_mun_sp_com_desvio.csv", sep=";", dtype=str)
-df= pd.read_csv("/home/samantha/tcc-culturaeduca/source/nov25/api/teste/4_resultados/result_elasticsearch/result_sao_paulo_com_desvio.csv", sep=";", dtype=str)
+df= pd.read_csv("/home/samantha/tcc-culturaeduca/source/nov25/api/teste/4_resultados/result_rapidfuzz/result_sao_paulo_20251125_042911_com_desvio.csv", sep=";", dtype=str)
 
 
 bins = [0, 500, 1000, 2000, 5000, 10000, 20000, 50000, np.inf]
