@@ -1,0 +1,16 @@
+--tipo_dados
+entrada
+--local_base_dados
+diadema
+--arquivo_dataset
+/home/samantha/tcc-culturaeduca/source/nov25/api/datasets/cnes_geo_padrao_ouro_diadema.csv
+--separador_arq_dataset
+;
+--colunas_logradouro_dataset
+NO_LOGRADO
+--coluna_bairro_dataset
+NO_BAIRRO
+--coluna_numero_dataset
+NU_ENDEREC
+--coluna_cd_setor_dataset
+CD_SETOR
