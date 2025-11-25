@@ -3,6 +3,21 @@ import torch
 from sentence_transformers import SentenceTransformer, util
 from comparador import montar_logradouro, normalize_bairro, formatar_endereco
 
+def encode_em_chunks(model, textos, batch_size=1000, device="cpu"):
+    """
+    Gera embeddings em blocos para evitar estouro de memória.
+    Retorna um tensor único contendo todos os embeddings.
+    """
+    all_embeddings = []
+
+    for i in range(0, len(textos), batch_size):
+        chunk = textos[i:i+batch_size]
+        emb = model.encode(chunk, convert_to_tensor=True, device=device)
+        all_embeddings.append(emb)
+
+    # concatena todos os pedaços
+    return torch.cat(all_embeddings, dim=0)
+
 def try_int(n):
     """
     Tenta converter um valor em número inteiro.
@@ -71,7 +86,12 @@ def executar_llm(
     # Gera os embeddings (vetores numéricos) para os logradouros
     # Quanto mais próximos dois vetores, mais semelhantes são os textos.
     emb1 = model.encode(df1["logradouro_normalizado"].tolist(), convert_to_tensor=True, show_progress_bar=False)
-    emb2 = model.encode(df2["logradouro_normalizado"].tolist(), convert_to_tensor=True, show_progress_bar=False)
+    emb2 = encode_em_chunks(
+        model,
+        df2["logradouro_normalizado"].tolist(),
+        batch_size=1000,
+        device=device
+    )
 
     emb_bairros1 = model.encode(df1["bairro_normalizado"].tolist(), convert_to_tensor=True)
     emb_bairros2 = model.encode(df2["bairro_normalizado"].tolist(), convert_to_tensor=True)
