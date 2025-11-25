@@ -37,15 +37,36 @@ def limpar_bairro_llm(b):
         b = b.replace(termo, "")
     return b.strip()
 
+
+# def executar_llm(
+#     df1, df2,
+#     colunas_logradouro1, colunas_logradouro2,
+#     col_num1=None, col_num2=None,
+#     col_bairro1=None, col_bairro2=None,
+#     top_n=5,
+#     peso_logradouro=0.5,
+#     peso_numero=0.4,
+#     peso_bairro=0.1,
+#     **kwargs
+# ):
+
+import time
+from datetime import timedelta
+
+
 def executar_llm(
     df1, df2,
     colunas_logradouro1, colunas_logradouro2,
+    colunas_logradouro1_original, colunas_logradouro2_original,
     col_num1=None, col_num2=None,
     col_bairro1=None, col_bairro2=None,
-    top_n=5,
-    peso_logradouro=0.5,
-    peso_numero=0.4,
-    peso_bairro=0.1,
+    col_bairro1_original=None, col_bairro2_original=None,
+    latitude_verdadeira=None, longitude_verdadeira=None, cd_setor_verdadeiro=None,
+    latitude_resultante=None, longitude_resultante=None, cd_setor_resultante=None,
+    cod_unico_endereco=None,
+    top_n=5, 
+    peso_logradouro=0.65, peso_numero=0.3, peso_bairro=0.05,
+    workers=None,
     **kwargs
 ):
 
@@ -69,28 +90,32 @@ def executar_llm(
     Retorna:
         Um DataFrame com os melhores matches entre endereços e as top N sugestões.
     """
-    
+    print('entrou na funcao executar_llm')
     # Define onde o modelo vai rodar: CPU ou GPU
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-
+    print('passou cuda')
     # Carrega o modelo de linguagem
     model = SentenceTransformer('sentence-transformers/paraphrase-MiniLM-L3-v2', device=device)
-
+    print('passou model')
     # Mantém cópia dos bairros originais (para exibir no resultado final)
-    df1["bairro_original"] = df1[col_bairro1] if col_bairro1 else ""
-    df2["bairro_original"] = df2[col_bairro2] if col_bairro2 else ""
+    # df1["bairro_original"] = df1[col_bairro1] if col_bairro1 else ""
+    # df2["bairro_original"] = df2[col_bairro2] if col_bairro2 else ""
 
     # Remove termos genéricos que atrapalham a similaridade semântica,
     # como “jardim”, “vila”, “bairro” etc.
-    df1["bairro_normalizado"] = df1["bairro_normalizado"].apply(limpar_bairro_llm)
-    df2["bairro_normalizado"] = df2["bairro_normalizado"].apply(limpar_bairro_llm)
+    tempo = time.time()
+    print("inicio normalizacao bairro")
+    df1[col_bairro1] = df1[col_bairro1].apply(limpar_bairro_llm)
+    df2[col_bairro2] = df2[col_bairro2].apply(limpar_bairro_llm)
+    elapsed = time.time() - tempo
+    print("fim normalizacao bairro, tempo:", str(timedelta(seconds=int(elapsed))))
 
     # Gera os embeddings (vetores numéricos) para os logradouros
     # Quanto mais próximos dois vetores, mais semelhantes são os textos.
-    emb1 = model.encode(df1["logradouro_normalizado"].tolist(), convert_to_tensor=True, show_progress_bar=False)
+    emb1 = model.encode(df1[colunas_logradouro1].tolist(), convert_to_tensor=True, show_progress_bar=False)
     emb2 = encode_em_chunks(
         model,
-        df2["logradouro_normalizado"].tolist(),
+        df2[colunas_logradouro2].tolist(),
         batch_size=1000,
         device=device
     )
@@ -102,13 +127,14 @@ def executar_llm(
     index.add_items(emb2.cpu().numpy(), list(range(len(emb2))))
     index.set_ef(200)  # precisão durante consulta
 
-    emb_bairros1 = model.encode(df1["bairro_normalizado"].tolist(), convert_to_tensor=True)
-    emb_bairros2 = model.encode(df2["bairro_normalizado"].tolist(), convert_to_tensor=True)
+    emb_bairros1 = model.encode(df1[col_bairro1].tolist(), convert_to_tensor=True)
+    emb_bairros2 = model.encode(df2[col_bairro2].tolist(), convert_to_tensor=True)
 
     resultados = []
     
     # Loop principal: compara cada endereço de df1 com todos de df2
-    for idx1, _ in enumerate(df1["logradouro_normalizado"]):
+    for idx1, _ in enumerate(df1[colunas_logradouro1]):
+        print(f'linha: {idx1}')
 
         # HNSW ANN
         # busca k vizinhos
@@ -131,7 +157,7 @@ def executar_llm(
 
         # Extrai número e bairro do endereço atual de df1
         num1_int = try_int(df1.loc[idx1, col_num1]) if col_num1 else None
-        bairro1 = df1.loc[idx1, "bairro_normalizado"]
+        bairro1 = df1.loc[idx1, col_bairro1]
 
         matches_final = []
 
@@ -140,7 +166,7 @@ def executar_llm(
 
             score_log = float(cos_scores[pos]) * 100  # 0..100
             num2_int = try_int(df2.loc[idx2, col_num2]) if col_num2 else None
-            bairro2 = df2.loc[idx2, "bairro_normalizado"]
+            bairro2 = df2.loc[idx2, col_bairro2]
 
             # O número do endereço é comparado de forma quantitativa
             if num1_int is not None and num2_int is not None:
@@ -198,7 +224,7 @@ def executar_llm(
         for idx2_sug, sc_log, sc_num, sc_bai, sc_final in matches_final[:top_n]:
             endereco_original = formatar_endereco(
                 df2.loc[idx2_sug],
-                colunas_logradouro2 + ([col_bairro2] if col_bairro2 else [])
+                colunas_logradouro2_original + ([col_bairro2_original] if col_bairro2_original else [])
             )
             numero = df2.loc[idx2_sug, col_num2] if col_num2 else ""
             sugestoes_formatadas.append(f"{endereco_original} {numero} | Score Final: {sc_final:.2f}")
@@ -206,18 +232,25 @@ def executar_llm(
         # Salva o resultado consolidado
         resultados.append({
             "idx_df1": idx1,
-            "endereco_df1": formatar_endereco(df1.loc[idx1], colunas_logradouro1 + ([col_bairro1] if col_bairro1 else [])),
+            "endereco_df1": formatar_endereco(df1.loc[idx1], colunas_logradouro1_original + ([col_bairro1_original] if col_bairro1_original else [])),
             "numero_df1": df1.loc[idx1, col_num1] if col_num1 else None,
-            "bairro_df1": df1.loc[idx1, "bairro_original"],
+            "bairro_df1": df1.loc[idx1, col_bairro1_original],
             "idx_df2": idx2,
-            "endereco_df2": formatar_endereco(df2.loc[idx2], colunas_logradouro2 + ([col_bairro2] if col_bairro2 else [])),
+            "cod_unico_df2": df2.at[idx2, cod_unico_endereco],
+            "endereco_df2": formatar_endereco(df2.loc[idx2], colunas_logradouro2_original + ([col_bairro2_original] if col_bairro2_original else [])),
             "numero_df2": df2.loc[idx2, col_num2] if col_num2 else None,
-            "bairro_df2": df2.loc[idx2, "bairro_original"],
+            "bairro_df2": df2.loc[idx2, col_bairro2_original],
             "similaridade_logradouro": round(score_log, 2),
             "similaridade_numero": round(score_num, 2) if score_num is not None else None,
             "similaridade_bairro": round(score_bairro, 2) if score_bairro is not None else None,
             "similaridade_final": round(melhor_final, 2),
-            "sugestoes_topN": "; ".join(sugestoes_formatadas)
+            "sugestoes_topN": "; ".join(sugestoes_formatadas),
+            "latitude_verdadeira": df1.at[idx1, latitude_verdadeira] if latitude_verdadeira else None,
+            "longitude_verdadeira": df1.at[idx1, longitude_verdadeira] if longitude_verdadeira else None,
+            "cd_setor_verdadeiro": df1.at[idx1, cd_setor_verdadeiro] if cd_setor_verdadeiro else None,
+            "latitude_resultante": df2.at[idx2, latitude_resultante] if latitude_resultante else None,
+            "longitude_resultante": df2.at[idx2, longitude_resultante] if longitude_resultante else None,
+            "cd_setor_resultante": df2.at[idx2, cd_setor_resultante] if cd_setor_resultante else None
         })
 
     return pd.DataFrame(resultados)
