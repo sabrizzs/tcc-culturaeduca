@@ -42,3 +42,9 @@ source/nov25/api/comparador_com_tipo_logradouro/1_normalizacao/datasets_normaliz
 
 source/nov25/api/comparador_com_tipo_logradouro/4_resultados/result_elasticsearch/
 source/nov25/api/comparador_com_tipo_logradouro/4_resultados/result_rapidfuzz/
+
+source/nov25/api/comparador_sem_tipo_logradouro/1_normalizacao/datasets_normalizados/
+
+source/nov25/api/comparador_sem_tipo_logradouro/3_geocodificacao/results/result_elasticsearch/
+
+source/nov25/api/comparador_sem_tipo_logradouro/3_geocodificacao/results/result_rapidfuzz/
