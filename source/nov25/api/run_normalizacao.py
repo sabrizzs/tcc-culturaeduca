@@ -1,6 +1,6 @@
 # run_normalizacao.py
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 from normalizar import normalizar_datasets
 import time
 import os
@@ -20,6 +20,9 @@ Responsabilidades:
 import argparse
 import unicodedata
 import re
+
+inicio = datetime.now()
+print("Início da execução:", inicio.strftime("%Y-%m-%d %H:%M:%S"))
 
 # normaliza o paramentro de dataset local_base_dados
 def normalizar(texto: str) -> str:
@@ -51,7 +54,6 @@ parser.add_argument("--coluna_numero_dataset", type=str, required=True, help="co
 parser.add_argument("--coluna_cd_setor_dataset", type=str, required=True, help="coluna com o setor censitario do arquivo do dataset")
 
 args = parser.parse_args()
-
 
 # coloca os argumentos nas variaveis
 
@@ -95,7 +97,6 @@ df_dataset_normalizado = normalizar_datasets(
 # -------------------
 # Exporta CSV
 # -------------------
-timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
 # Cria pasta de resultados separada pelo algoritmo
 pasta_resultados = "datasets_normalizados"
@@ -106,6 +107,7 @@ arquivo_dataset_normalizada = os.path.join(pasta_resultados, f"normalizado_{base
 
 # Salva CSV
 df_dataset_normalizado.to_csv(arquivo_dataset_normalizada, index=False, sep=";") # ; será o separador dos arquivos normalizados
+
 elapsed = time.time() - start_time
 print(f"CSV do dataset normalizado salvo em: {arquivo_dataset_normalizada}")
-print(f"Tempo de execução: {elapsed:.2f} segundos.")
+print("Tempo de execução:", str(timedelta(seconds=int(elapsed))))
