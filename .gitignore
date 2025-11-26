@@ -30,7 +30,7 @@ source/nov25/api/datasets/
 source/nov25/api/venv311/
 
 source/nov25/api/datasets_normalizados/
-source/nov25/api/results/
+source/nov25/api/results_antigo/
 
 .vscode/launch.json
 
@@ -38,8 +38,7 @@ results/result_rapidfuzz/result_diadema_20251119_000700.csv
 
 source/nov25/api/3513801_DIADEMA.csv
 
-source/nov25/api/teste/1_normalizacao/datasets_normalizados_atual
+source/nov25/api/comparador_com_tipo_logradouro/1_normalizacao/datasets_normalizados_atual/
 
-source/nov25/api/teste/4_resultados/result_elasticsearch
-
-source/nov25/api/teste/4_resultados/result_rapidfuzz
+source/nov25/api/comparador_com_tipo_logradouro/4_resultados/result_elasticsearch/
+source/nov25/api/comparador_com_tipo_logradouro/4_resultados/result_rapidfuzz/
