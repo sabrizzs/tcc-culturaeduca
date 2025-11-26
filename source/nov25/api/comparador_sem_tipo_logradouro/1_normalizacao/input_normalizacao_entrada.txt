@@ -1,9 +1,9 @@
 --tipo_dados
 entrada
 --local_base_dados
-rondonia
+sao paulo
 --arquivo_dataset
-/home/samantha/tcc-culturaeduca/source/nov25/api/datasets/educacao_2024_RO.csv
+/home/samantha/tcc-culturaeduca/source/nov25/api/datasets/educacao_2024_MUN_SP.csv
 --separador_arq_dataset
 ,
 --colunas_logradouro_dataset
