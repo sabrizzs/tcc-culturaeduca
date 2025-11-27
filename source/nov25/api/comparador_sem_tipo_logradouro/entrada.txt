@@ -1,11 +1,11 @@
 --algoritmo
-elasticsearch
+rapidfuzz
 --local_base_dados
-rondonia
+sao paulo
 --arquivo_entrada
-/home/samantha/tcc-culturaeduca/source/nov25/api/datasets_normalizados/normalizado_rondonia_entrada.csv
+C:\Projetos\tcc-culturaeduca\source\nov25\api\datasets_normalizados\normalizado_sao_paulo_entrada.csv
 --arquivo_base_cnefe
-/home/samantha/tcc-culturaeduca/source/nov25/api/datasets_normalizados/normalizado_rondonia_cnefe.csv
+C:\Projetos\tcc-culturaeduca\source\nov25\api\datasets_normalizados\normalizado_sao_paulo_cnefe.csv
 --separador_arq_entrada
 ;
 --separador_arq_cnefe
