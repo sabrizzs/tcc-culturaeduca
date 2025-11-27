@@ -112,13 +112,13 @@ def executar_llm(
 
     # Gera os embeddings (vetores numéricos) para os logradouros
     # Quanto mais próximos dois vetores, mais semelhantes são os textos.
-    emb1 = model.encode(df1[colunas_logradouro1].tolist(), convert_to_tensor=True, show_progress_bar=False)
-    emb2 = encode_em_chunks(
-        model,
-        df2[colunas_logradouro2].tolist(),
-        batch_size=1000,
-        device=device
-    )
+    # Junta todas as colunas de logradouro em uma string única por linha
+    textos1 = df1[colunas_logradouro1].astype(str).agg(" ".join, axis=1).tolist()
+    textos2 = df2[colunas_logradouro2].astype(str).agg(" ".join, axis=1).tolist()
+
+    emb1 = model.encode(textos1, convert_to_tensor=True, show_progress_bar=False)
+    emb2 = encode_em_chunks(model, textos2, batch_size=1000, device=device)
+
 
     # HNSWLIB
     dim = emb2.shape[1]
@@ -126,6 +126,7 @@ def executar_llm(
     index.init_index(max_elements=len(emb2), ef_construction=200, M=16)
     index.add_items(emb2.cpu().numpy(), list(range(len(emb2))))
     index.set_ef(200)  # precisão durante consulta
+    print("passou HNSWWLIB")
 
     emb_bairros1 = model.encode(df1[col_bairro1].tolist(), convert_to_tensor=True)
     emb_bairros2 = model.encode(df2[col_bairro2].tolist(), convert_to_tensor=True)

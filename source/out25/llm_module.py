@@ -1,7 +1,7 @@
 import pandas as pd
 import torch
 from sentence_transformers import SentenceTransformer, util
-from comparador import montar_logradouro, normalize_bairro, formatar_endereco
+from comparador import formatar_endereco
 
 def encode_em_chunks(model, textos, batch_size=1000, device="cpu"):
     """

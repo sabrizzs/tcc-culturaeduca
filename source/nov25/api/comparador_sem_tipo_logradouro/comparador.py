@@ -208,18 +208,40 @@ def comparar(df1: pd.DataFrame, df2: pd.DataFrame,
     elif algoritmo == "llm":
         print('no llm')
         from llm_module import executar_llm
+        # return executar_llm(
+        #     df1, df2,
+        #     "logradouro_normalizado", "logradouro_normalizado", 
+        #     colunas_logradouro1, colunas_logradouro2,
+        #     "numero_int", "numero_int",
+        #     "bairro_normalizado", "bairro_normalizado",
+        #     col_bairro1=col_bairro1, col_bairro2=col_bairro2,
+        #     latitude_verdadeira=latitude_verdadeira, longitude_verdadeira=longitude_verdadeira, cd_setor_verdadeiro=cd_setor_verdadeiro,
+        #     latitude_resultante=latitude_resultante, longitude_resultante=longitude_resultante, cd_setor_resultante=cd_setor_resultante,
+        #     cod_unico_endereco=cod_unico_endereco,
+        #     **kwargs
+        # )
         return executar_llm(
             df1, df2,
-            "logradouro_normalizado", "logradouro_normalizado", 
-            colunas_logradouro1, colunas_logradouro2,
-            "numero_int", "numero_int",
-            "bairro_normalizado", "bairro_normalizado",
-            col_bairro1=col_bairro1, col_bairro2=col_bairro2,
-            latitude_verdadeira=latitude_verdadeira, longitude_verdadeira=longitude_verdadeira, cd_setor_verdadeiro=cd_setor_verdadeiro,
-            latitude_resultante=latitude_resultante, longitude_resultante=longitude_resultante, cd_setor_resultante=cd_setor_resultante,
+            colunas_logradouro1,
+            colunas_logradouro2,
+            colunas_logradouro1_original=colunas_logradouro1,
+            colunas_logradouro2_original=colunas_logradouro2,
+            col_num1=col_num1,
+            col_num2=col_num2,
+            col_bairro1=col_bairro1,
+            col_bairro2=col_bairro2,
+            col_bairro1_original=col_bairro1,
+            col_bairro2_original=col_bairro2,
+            latitude_verdadeira=latitude_verdadeira,
+            longitude_verdadeira=longitude_verdadeira,
+            cd_setor_verdadeiro=cd_setor_verdadeiro,
+            latitude_resultante=latitude_resultante,
+            longitude_resultante=longitude_resultante,
+            cd_setor_resultante=cd_setor_resultante,
             cod_unico_endereco=cod_unico_endereco,
             **kwargs
         )
+
     elif algoritmo == "elasticsearch":
         from elasticsearch_module import executar_elasticsearch # funcao atualizada
         return executar_elasticsearch(
