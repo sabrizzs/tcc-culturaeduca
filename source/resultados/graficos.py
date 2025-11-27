@@ -206,7 +206,7 @@ if __name__ == "__main__":
         df_all = pd.concat(dfs_algoritmos.values())
 
         # Gráficos
-        grafico_rosca_match(dfs_algoritmos, cidade, output_dir)
+        # grafico_rosca_match(dfs_algoritmos, cidade, output_dir)
         grafico_rosca_categorias(dfs_algoritmos, cidade, output_dir)
         grafico_kde(df_all, cidade, output_dir)
 
