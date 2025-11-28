@@ -5,7 +5,6 @@ import seaborn as sns
 import os
 from scipy.stats import gaussian_kde
 
-
 # ============================================================
 # 1) CONFIGURAÇÃO GERAL — APENAS CAMINHOS DOS ARQUIVOS
 # ============================================================
@@ -67,45 +66,6 @@ def contar_match_mismatch(df):
         "mismatch": categorias.get("Vizinho", 0) + categorias.get("Errado", 0)
     }
 
-
-
-# ============================================================
-# 3) GRÁFICO DE ROSCA — MATCH / MISMATCH
-# ============================================================
-
-def grafico_rosca_match(df_por_algoritmo, nome_cidade, output_dir):
-
-    fig, axes = plt.subplots(1, len(df_por_algoritmo), figsize=(14, 6))
-
-    if len(df_por_algoritmo) == 1:
-        axes = [axes]
-
-    for ax, (alg, df) in zip(axes, df_por_algoritmo.items()):
-        cont = contar_match_mismatch(df)
-
-        valores = [cont["match"], cont["mismatch"]]
-        labels = ["Match", "Mismatch"]
-        cores  = ["#4CAF50", "#F44336"]
-
-        ax.pie(
-            valores,
-            labels=labels,
-            colors=cores,
-            autopct='%1.1f%%',
-            pctdistance=0.8,
-            labeldistance=1.1,
-            wedgeprops={'width': 0.35, 'edgecolor': 'white'}
-        )
-
-        ax.set_title(alg)
-
-    plt.suptitle(f"Percentual de pontos no setor censitário correto — {nome_cidade}", fontsize=15)
-    plt.tight_layout()
-    plt.savefig(f"{output_dir}/rosca_match.png", dpi=300)
-    plt.close()
-
-
-
 # ============================================================
 # 4) GRÁFICO DE ROSCA — CORRETO / VIZINHO / ERRADO
 # ============================================================
@@ -131,7 +91,6 @@ def grafico_rosca_categorias(df_por_algoritmo, nome_cidade, output_dir):
 
         ax.pie(
             valores,
-            labels=labels,
             colors=[cores[k] for k in labels],
             autopct='%1.1f%%',
             pctdistance=0.8,
@@ -139,10 +98,33 @@ def grafico_rosca_categorias(df_por_algoritmo, nome_cidade, output_dir):
             wedgeprops={'width': 0.35, 'edgecolor': 'white'}
         )
 
-        ax.set_title(alg)
+        ax.set_title(alg, fontsize=19, pad=-40)
 
-    plt.suptitle(f"Percentual de pontos no setor censitário correto — {nome_cidade}", fontsize=16)
-    plt.tight_layout()
+    plt.suptitle(
+        f"Percentual de pontos no setor censitário correto — {nome_cidade}",
+        fontsize=20,
+        weight="bold"
+    )
+
+
+    from matplotlib.patches import Patch
+
+    legendas = [
+        Patch(facecolor=cores["Correto"], label="Correto"),
+        Patch(facecolor=cores["Vizinho"], label="Vizinho"),
+        Patch(facecolor=cores["Errado"],  label="Errado")
+    ]
+
+    fig.legend(
+        handles=legendas,
+        loc='lower center',
+        ncol=3,
+        fontsize=16,
+        frameon=False,
+        bbox_to_anchor=(0.5, 0.08)   # legenda sobe
+    )
+
+    #plt.tight_layout()
     plt.savefig(f"{output_dir}/rosca_categorias.png", dpi=300)
     plt.close()
 
@@ -163,15 +145,15 @@ def grafico_kde(df_all, nome_cidade, output_dir):
     sns.kdeplot(
         data=df_all,
         x="desvio_metros",
-        hue="alg",
-        clip=(0, None),
-        linewidth=2
+        hue="algoritmo",
+        #clip=(0, None),
+        linewidth=2.5
     )
 
-    plt.title(f"Distribuição do erro de distância (real vs encontrado) — {nome_cidade}")
-    plt.xlabel("Erro de distância (m)")
-    plt.ylabel("Densidade de ocorrências")
-    plt.tight_layout()
+    plt.title(f"Distribuição do erro de distância (real vs encontrado) — {nome_cidade}", fontsize=18, weight="bold")
+    plt.xlabel("Erro de distância (m)", fontsize=12)
+    plt.ylabel("Densidade de ocorrências", fontsize=12)
+    #plt.tight_layout()
     plt.savefig(f"{output_dir}/kde_distancia.png", dpi=300)
     plt.close()
 
@@ -199,7 +181,7 @@ if __name__ == "__main__":
                 continue
 
             df = pd.read_csv(arq)
-            df["alg"] = alg
+            df["algoritmo"] = alg
             dfs_algoritmos[alg] = df
 
         # Concatenado geral para o KDE
