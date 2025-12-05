@@ -1,5 +1,5 @@
 --algoritmo
-elasticsearch
+rapidfuzz
 --local_base_dados
 diadema
 --arquivo_entrada

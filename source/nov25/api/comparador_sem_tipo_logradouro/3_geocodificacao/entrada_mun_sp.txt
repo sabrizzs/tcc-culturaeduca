@@ -1,5 +1,5 @@
 --algoritmo
-elasticsearch
+rapidfuzz
 --local_base_dados
 sao paulo
 --arquivo_entrada

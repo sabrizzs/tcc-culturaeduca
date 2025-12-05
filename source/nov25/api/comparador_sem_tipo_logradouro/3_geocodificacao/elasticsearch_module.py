@@ -212,6 +212,18 @@ def executar_elasticsearch(
         endereco1 = row[colunas_logradouro1]
         bairro1 = row[col_bairro1]
 
+        # Converte NaN em None (permite a leitura em JSON)
+        if endereco1 is not None:
+            endereco1 = str(endereco1).strip()
+            if endereco1 == "" or endereco1.lower() == "nan":
+                endereco1 = None
+
+        if bairro1 is not None:
+            bairro1 = str(bairro1).strip()
+            if bairro1 == "" or bairro1.lower() == "nan":
+                bairro1 = None
+
+
         num1 = df1.loc[idx1, col_num1] if col_num1 else None
         num1_int = try_int(num1)
 

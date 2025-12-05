@@ -25,14 +25,14 @@ def haversine_series(lat1, lon1, lat2, lon2):
     return R * c  # distância em metros
 
 
-df_res= pd.read_csv("/home/samantha/tcc-culturaeduca/source/nov25/api/comparador_sem_tipo_logradouro/3_geocodificacao/results/result_elasticsearch/result_diadema_20251126_195122.csv", sep=";", dtype=str)
+df_res= pd.read_csv("/home/samantha/tcc-culturaeduca/source/nov25/api/comparador_sem_tipo_logradouro/3_geocodificacao/results/result_geocodebr/resultado_sao_paulo_normalizado_geocodebr_ajuste.csv", sep=",", dtype=str)
 
 # calcula a distância linha a linha (vetorizado, rápido)
-df_res["desvio_metros"] = haversine_series(
-    df_res["latitude_verdadeira"],
-    df_res["longitude_verdadeira"],
-    df_res["latitude_resultante"],
-    df_res["longitude_resultante"],
+df_res["desvio_metros_final"] = haversine_series(
+    df_res["latitude"],
+    df_res["longitude"],
+    df_res["lat"],
+    df_res["lon"],
 )
 
-df_res.to_csv("resultado_diadema.csv", index=False, sep=";")
+df_res.to_csv("resultado_geocodebr_norm.csv", index=False, sep=";")

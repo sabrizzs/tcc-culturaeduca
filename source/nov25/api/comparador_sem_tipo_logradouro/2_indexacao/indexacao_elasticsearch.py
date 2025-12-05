@@ -15,7 +15,7 @@ Responsabilidades:
 # Configurações do usuário - Dados de Entrada
 # -------------------
 
-arquivo_cnefe_normalizado = "/home/samantha/tcc-culturaeduca/source/nov25/api/comparador_sem_tipo_logradouro/1_normalizacao/datasets_normalizados/normalizado_diadema_cnefe.csv" # dados dos arquivos do cnefe
+arquivo_cnefe_normalizado = "/home/samantha/tcc-culturaeduca/source/nov25/api/comparador_sem_tipo_logradouro/1_normalizacao/datasets_normalizados/normalizado_sao_paulo_cnefe.csv" # dados dos arquivos do cnefe
 ELASTICSEARCH_PW = "HO2Vv2MWa=jTr-EHSmEt" # chave do elasticsearch
 
 # -------------------
@@ -158,7 +158,6 @@ def indexar_elasticsearch(df2):
 
     success = indexar_enderecos_elasticsearch(df2, index_name=index_name)
     if success:
-        time.sleep(1)  # Espera para o índice estar pronto
         print('✅ Indexação realizada com sucesso!')
 
 

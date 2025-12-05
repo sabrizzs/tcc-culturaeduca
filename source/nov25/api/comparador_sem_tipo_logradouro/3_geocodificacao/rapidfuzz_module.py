@@ -646,7 +646,7 @@ def executar_rapidfuzz(
                     colunas_complemento1
                 ) if colunas_complemento1 else None,
                 "bairro_df1": bairro1,
-                "idx_df2": None,
+                "idx_df2": pd.NA,
                 "cod_unico_df2": None,
                 "endereco_df2": None,
                 "numero_df2": None,
