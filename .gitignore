@@ -36,22 +36,8 @@ source/nov25/api/results_antigo/
 
 results/result_rapidfuzz/result_diadema_20251119_000700.csv
 
-source/nov25/api/3513801_DIADEMA.csv
+source/1_normalizacao/datasets_normalizados/
 
-source/nov25/api/comparador_com_tipo_logradouro/1_normalizacao/datasets_normalizados_atual/
+source/3_geocodificacao/results/
 
-source/nov25/api/comparador_com_tipo_logradouro/4_resultados/result_elasticsearch/
-source/nov25/api/comparador_com_tipo_logradouro/4_resultados/result_rapidfuzz/
-/source/nov25/api/comparador_sem_tipo_logradouro/__pycache__
-
-source/nov25/api/comparador_sem_tipo_logradouro/1_normalizacao/datasets_normalizados/
-
-source/nov25/api/comparador_sem_tipo_logradouro/3_geocodificacao/results/result_elasticsearch/
-
-source/nov25/api/comparador_sem_tipo_logradouro/3_geocodificacao/results/result_rapidfuzz/
-
-source/nov25/api/comparador_sem_tipo_logradouro/3_geocodificacao/results/result_geocodebr
-
-source/nov25/api/comparador_sem_tipo_logradouro/4_resultados/result_diadema_20251125_211857_com_desvio.csv
-
-source/nov25/api/comparador_sem_tipo_logradouro/4_resultados/resultado_geocodebr_norm.csv
+source/nov25/
