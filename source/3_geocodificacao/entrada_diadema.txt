@@ -1,11 +1,11 @@
 --algoritmo
-rapidfuzz
+llm
 --local_base_dados
 diadema
 --arquivo_entrada
-/home/samantha/tcc-culturaeduca/source/nov25/api/datasets_normalizados/normalizado_diadema_entrada.csv
+/home/samantha/tcc-culturaeduca/source/1_normalizacao/datasets_normalizados/normalizado_diadema_entrada.csv
 --arquivo_base_cnefe
-/home/samantha/tcc-culturaeduca/source/nov25/api/datasets_normalizados/normalizado_diadema_cnefe.csv
+/home/samantha/tcc-culturaeduca/source/1_normalizacao/datasets_normalizados/normalizado_diadema_cnefe.csv
 --separador_arq_entrada
 ;
 --separador_arq_cnefe
@@ -43,3 +43,5 @@ LONGITUDE
 COD_SETOR
 --cod_unico_endereco
 COD_UNICO_ENDERECO
+--cod_unico_endereco_entrada
+CO_UNIDADE

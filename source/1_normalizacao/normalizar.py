@@ -99,7 +99,7 @@ def normalize_setor_censitario(df: pd.DataFrame, col_cd_setor: str) -> pd.Series
     """Retira a última letra do cd_setor se houver, mas mantém NaN/None."""
     return (
         df[col_cd_setor]
-        .astype("string")  # tipo nativo string (aceita <NA>)
+        .astype("string") 
         .str.replace(r"[A-Za-z]$", "", regex=True)
     )
 
@@ -167,6 +167,7 @@ def normalizar_datasets(df: pd.DataFrame,
     - colunas_logradouro: listas de colunas que compõem o logradouro
     - col_num: coluna de número do logradouro
     - col_bairro: coluna de bairro
+    - cd_setor: coluna do setor censitário
     """
     # Prepara DataFrames
     df_normalizado = preparar_dataframe(df, colunas_logradouro, col_num, col_bairro, cd_setor)

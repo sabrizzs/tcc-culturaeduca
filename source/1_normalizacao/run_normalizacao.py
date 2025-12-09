@@ -4,6 +4,9 @@ from datetime import datetime, timedelta
 from normalizar import normalizar_datasets
 import time
 import os
+import argparse
+import unicodedata
+import re
 
 """
 Run normalizacao
@@ -12,14 +15,6 @@ Responsabilidades:
 2. Normaliza colunas de logradouro, número, bairro e codigo_setor.
 4. Salvar o dataset normalizado em csv.
 """
-
-# -------------------
-# Configurações do usuário - Dados de dataset
-# -------------------
-
-import argparse
-import unicodedata
-import re
 
 inicio = datetime.now()
 print("Início da execução:", inicio.strftime("%Y-%m-%d %H:%M:%S"))
@@ -35,7 +30,10 @@ def normalizar(texto: str) -> str:
     return texto
 
 
-# le arquivo de dataset
+# -------------------
+# Configurações do usuário - dados do dataset
+# -------------------
+
 parser = argparse.ArgumentParser(fromfile_prefix_chars='@')
 
 parser.add_argument("--tipo_dados", type=str, required=True, help="se é entrada ou do cnefe")
@@ -55,7 +53,9 @@ parser.add_argument("--coluna_cd_setor_dataset", type=str, required=True, help="
 
 args = parser.parse_args()
 
-# coloca os argumentos nas variaveis
+# -------------------
+# Coloca os argumentos nas variaveis
+# -------------------
 
 # dados dos arquivos de dataset e do cnefe
 arquivo_dataset = args.arquivo_dataset

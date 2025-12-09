@@ -67,6 +67,7 @@ parser.add_argument("--coluna_longitude_resultante", type=str, required=True, he
 parser.add_argument("--coluna_cd_setor_resultante", type=str, required=True, help="coluna com o setor verdadeiro do arquivo do cnefe")
 
 parser.add_argument("--cod_unico_endereco", type=str, required=True, help="codigo unico do endereço do cnefe")
+parser.add_argument("--cod_unico_endereco_entrada", type=str, required=False, help="codigo unico do endereço de entrada")
 
 
 args = parser.parse_args()
@@ -105,6 +106,7 @@ coluna_longitude_resultante = args.coluna_longitude_resultante
 coluna_cd_setor_resultante = args.coluna_cd_setor_resultante
 
 cod_unico_endereco = args.cod_unico_endereco # codigo que identifica o endereço no cnefe
+cod_unico_endereco_entrada = args.cod_unico_endereco_entrada if args.cod_unico_endereco_entrada else None # codigo que identifica o endereço no cnefe
 
 base_dados = normalizar(args.local_base_dados) # local da base de dados para colocar no nome do arquivo final
 
@@ -156,8 +158,12 @@ df_resultados = comparar(
     latitude_resultante=coluna_latitude_resultante,
     longitude_resultante=coluna_longitude_resultante,
     cd_setor_resultante=coluna_cd_setor_resultante,
-    cod_unico_endereco=cod_unico_endereco
+    cod_unico_endereco=cod_unico_endereco,
+    cod_unico_endereco_entrada=cod_unico_endereco_entrada
 )
+
+print('---------df resultados---------')
+print(df_resultados)
 
 # Resumo de similaridade
 faixas = {

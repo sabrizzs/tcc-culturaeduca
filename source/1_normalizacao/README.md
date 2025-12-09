@@ -4,7 +4,9 @@
 
 ### Arquivos de input
 
-Nos arquivos `input_normalizacao_cnefe.txt` e `input_normalizacao_entrada.txt`, substituir os textos de cada arquivos conforme as informações abaixo, de acordo com a base de dados que está utilizando:
+Nos arquivos `input_normalizacao_cnefe.txt` e `input_normalizacao_entrada.txt`, substituir os textos de cada arquivo conforme as informações abaixo, de acordo com a base de dados que está utilizando:
+
+Observação: substitua o caminho do arquivo abaixo de ``--arquivo_dataset`
 
 #### Diadema
 
