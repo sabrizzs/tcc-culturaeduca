@@ -479,8 +479,8 @@ def executar_llm(
                     (%s * (c.logradouro_embedding <-> e.logradouro_embedding)
                      + %s * (c.numero_embedding   <-> e.numero_embedding)
                      + %s * (c.bairro_embedding   <-> e.bairro_embedding)) AS distancia_final
-                FROM entrada_diadema_embeddings e
-                JOIN cnefe_diadema_embeddings   c ON TRUE
+                FROM entrada_rondonia_embeddings e
+                JOIN cnefe_rondonia_embeddings   c ON TRUE
                 WHERE e.cod_unico = %s
                 ORDER BY distancia_final
                 LIMIT %s;

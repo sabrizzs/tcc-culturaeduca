@@ -1,16 +1,23 @@
+# ============================
+# COM PCA - vetor com 128 dim
+# ============================
+
+#!/usr/bin/env python
 import os
 import numpy as np
 import pandas as pd
 import psycopg2
 from psycopg2.extras import execute_values
 from sentence_transformers import SentenceTransformer
+from sklearn.decomposition import PCA
 
-# --------------------
-# Configurações
-# --------------------
+# ========================
+# CONFIGURAÇÕES
+# ========================
+
 
 # ARQUIVO_ENTRADA = "/home/samantha/tcc-culturaeduca/source/1_normalizacao/datasets_normalizados/normalizado_sao_paulo_cnefe.csv"
-ARQUIVO_ENTRADA = "/home/samantha/tcc-culturaeduca/source/1_normalizacao/datasets_normalizados/normalizado_rondonia_cnefe.csv"
+ARQUIVO_ENTRADA = "/home/samantha/tcc-culturaeduca/source/1_normalizacao/datasets_normalizados/normalizado_mun_sp_cnefe.csv"
 
 COL_LOGRADOURO = "logradouro_normalizado"
 COL_NUMERO = "numero_int"
@@ -26,15 +33,16 @@ PG_DSN = os.getenv(
     "dbname=tcc user=postgres password=password host=localhost port=5432",
 )
 
-TABELA_EMBEDDINGS = "cnefe_rondonia_embeddings"
+TABELA_EMBEDDINGS = "cnefe_mun_sp_embeddings"
 CHUNK_ROWS = 10_000  # linhas por chunk
 
 MODELO_BASE = "paraphrase-MiniLM-L3-v2"
+DIM_FINAL = 128  # dimensão alvo dos embeddings de cada campo
 
 
-# --------------------
-# Funções auxiliares
-# --------------------
+# ========================
+# FUNÇÕES AUXILIARES
+# ========================
 
 def conectar_pg():
     conn = psycopg2.connect(PG_DSN)
@@ -51,21 +59,22 @@ def vetor_para_pgvector(vec):
     return "[" + ",".join(valores) + "]"
 
 
-# --------------------
-# main
-# --------------------
+# ========================
+# MAIN
+# ========================
 
 def main():
     print("Carregando modelo base...")
     base_model = SentenceTransformer(MODELO_BASE)
     print(f"Modelo carregado: {MODELO_BASE}")
-    dim_embedding = base_model.get_sentence_embedding_dimension()
-    print(f"Dimensão original do embedding: {dim_embedding}")
+    print(f"Dimensão original: {base_model.get_sentence_embedding_dimension()}")
+
+    pca = None  # será definido no primeiro chunk
 
     conn = conectar_pg()
     cur = conn.cursor()
 
-    print(f"→ Cada embedding (logradouro/numero/bairro) terá dimensão {dim_embedding} (sem PCA).")
+    print(f"→ Cada embedding (logradouro/numero/bairro) terá dimensão até {DIM_FINAL} usando PCA.")
 
     # Criar tabela de embeddings (3 vetores separados)
     cur.execute(f"""
@@ -75,9 +84,9 @@ def main():
             logradouro             text,
             numero                 text,
             bairro                 text,
-            logradouro_embedding   vector({dim_embedding}),
-            numero_embedding       vector({dim_embedding}),
-            bairro_embedding       vector({dim_embedding})
+            logradouro_embedding   vector({DIM_FINAL}),
+            numero_embedding       vector({DIM_FINAL}),
+            bairro_embedding       vector({DIM_FINAL})
         );
     """)
     conn.commit()
@@ -91,7 +100,6 @@ def main():
         chunksize=CHUNK_ROWS,
         usecols=[c for c in COLS_NECESSARIAS if c is not None],
     )
-
 
     total_processado = 0
     for chunk_idx, df_chunk in enumerate(reader):
@@ -107,23 +115,67 @@ def main():
         else:
             cods = df_chunk.index.astype(str).tolist()
 
+        # Gera embeddings "cheios" (384 dims) para cada componente
         show_bar = (chunk_idx == 0)
-
-        # Gera embeddings na dimensão original do modelo (sem PCA)
-        emb_log = base_model.encode(
+        emb_log_full = base_model.encode(
             logradouros, show_progress_bar=show_bar, convert_to_numpy=True
         )
-        emb_num = base_model.encode(
+        emb_num_full = base_model.encode(
             numeros, show_progress_bar=False, convert_to_numpy=True
         )
-        emb_bairro = base_model.encode(
+        emb_bairro_full = base_model.encode(
             bairros, show_progress_bar=False, convert_to_numpy=True
         )
+
+        # Treinar PCA no primeiro chunk usando todos os tipos combinados
+        if chunk_idx == 0:
+            # empilha todos embeddings (3 * n amostras)
+            embeddings_concat = np.vstack([emb_log_full, emb_num_full, emb_bairro_full])
+            n_samples_total, n_features = embeddings_concat.shape
+            max_components = min(DIM_FINAL, n_samples_total, n_features)
+
+            if max_components < DIM_FINAL:
+                print(
+                    f"AVISO: poucas amostras ({n_samples_total}) para PCA={DIM_FINAL}. "
+                    f"Usando n_components={max_components} e preenchendo o resto com zeros."
+                )
+
+            pca = PCA(n_components=max_components)
+            print("Treinando PCA com o primeiro chunk (logradouro+numero+bairro)...")
+            pca.fit(embeddings_concat)
+            print("PCA treinado.")
+
+        # Aplica PCA em cada tipo de embedding
+        emb_log_red = pca.transform(emb_log_full)
+        emb_num_red = pca.transform(emb_num_full)
+        emb_bairro_red = pca.transform(emb_bairro_full)
+
+        # Se max_components < DIM_FINAL, preenche com zeros para ter sempre DIM_FINAL
+        if emb_log_red.shape[1] < DIM_FINAL:
+            pad_width = DIM_FINAL - emb_log_red.shape[1]
+            emb_log_red = np.pad(
+                emb_log_red,
+                pad_width=((0, 0), (0, pad_width)),
+                mode="constant",
+                constant_values=0.0,
+            )
+            emb_num_red = np.pad(
+                emb_num_red,
+                pad_width=((0, 0), (0, pad_width)),
+                mode="constant",
+                constant_values=0.0,
+            )
+            emb_bairro_red = np.pad(
+                emb_bairro_red,
+                pad_width=((0, 0), (0, pad_width)),
+                mode="constant",
+                constant_values=0.0,
+            )
 
         registros_para_inserir = []
         for cod, log, num, bai, e_log, e_num, e_bai in zip(
             cods, logradouros, numeros, bairros,
-            emb_log, emb_num, emb_bairro
+            emb_log_red, emb_num_red, emb_bairro_red
         ):
             registros_para_inserir.append(
                 (
@@ -163,3 +215,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

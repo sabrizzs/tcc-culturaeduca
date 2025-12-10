@@ -38,3 +38,5 @@ LONGITUDE
 COD_SETOR
 --cod_unico_endereco
 COD_UNICO_ENDERECO
+--cod_unico_endereco_entrada
+_id
