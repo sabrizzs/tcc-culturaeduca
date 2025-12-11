@@ -12,46 +12,6 @@ from sentence_transformers import SentenceTransformer, util
 
 from comparador import formatar_endereco
 
-
-# -------------------
-# Funções auxiliares
-# -------------------
-
-def encode_em_chunks(model, textos, batch_size=1000, device="cpu"):
-    """
-    Gera embeddings em blocos para evitar estouro de memória.
-    Retorna um tensor único contendo todos os embeddings.
-    """
-    all_embeddings = []
-
-    for i in range(0, len(textos), batch_size):
-        chunk = textos[i:i + batch_size]
-        emb = model.encode(chunk, convert_to_tensor=True, device=device)
-        all_embeddings.append(emb)
-
-    return torch.cat(all_embeddings, dim=0)
-
-
-def try_int(n):
-    """
-    Tenta converter um valor em número inteiro.
-    Retorna None se não for possível (exemplo: texto vazio).
-    """
-    if pd.isna(n):
-        return None
-    try:
-        return int(float(n))
-    except Exception:
-        return None
-
-
-def limpar_bairro_llm(b):
-    b = "" if pd.isna(b) else str(b).lower()
-    for termo in ["jardim", "jd", "vila", "vl", "bairro", "jd.", "vl.", "pq.", "parque"]:
-        b = b.replace(termo, "")
-    return b.strip()
-
-
 # -------------------
 # Postgres / util
 # -------------------

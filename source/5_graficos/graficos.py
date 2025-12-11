@@ -15,7 +15,7 @@ CIDADES = {
             "RapidFuzz": "resultado_final_diadema_rapidfuzz.csv",
             "ElasticSearch": "resultado_final_diadema_elasticsearch.csv",
             "GeoCodeBR": "resultado_final_diadema_geocodebr.csv",
-            # "LLM": "",
+            "LLM": "resultado_final_diadema_llm.csv",
         }
     },
 
@@ -24,7 +24,7 @@ CIDADES = {
             "RapidFuzz": "resultado_final_rondonia_rapidfuzz.csv",
             "ElasticSearch": "resultado_final_rondonia_elasticsearch.csv",
             "GeoCodeBR": "resultado_final_geocodebr_ro.csv",
-            # "LLM": "",
+            "LLM": "resultado_final_rondonia_llm.csv",
         }
     },
 
@@ -37,7 +37,6 @@ CIDADES = {
         }
     }
 }
-
 
 
 # ---------------
@@ -167,7 +166,7 @@ if __name__ == "__main__":
 
     for cidade, info in CIDADES.items():
 
-        print(f"\n📍 Gerando gráficos para {cidade}...")
+        print(f"\n Gerando gráficos para {cidade}...")
 
         output_dir = f"graficos_{cidade.lower().replace(' ', '_')}"
         os.makedirs(output_dir, exist_ok=True)
