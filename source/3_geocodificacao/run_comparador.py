@@ -22,18 +22,14 @@ import argparse
 import unicodedata
 import re
 
-# normaliza o paramentro de entrada local_base_dados
+# Normaliza o paramentro de entrada local_base_dados
 def normalizar(texto: str) -> str:
-    # remove acentos
     texto = unicodedata.normalize('NFKD', texto).encode('ascii', 'ignore').decode('utf-8')
-    # tudo minúsculo
     texto = texto.lower()
-    # troca qualquer sequência de espaços por underline
     texto = re.sub(r'\s+', '_', texto)
     return texto
 
 
-# le arquivo de entrada
 parser = argparse.ArgumentParser(fromfile_prefix_chars='@')
 
 
@@ -73,16 +69,16 @@ parser.add_argument("--cod_unico_endereco_entrada", type=str, required=False, he
 args = parser.parse_args()
 
 
-# coloca os argumentos nas variaveis
+# Coloca os argumentos nas variaveis
 
-# dados dos arquivos de entrada e do cnefe
+# Dados dos arquivos de entrada e do cnefe
 arquivo_entrada = args.arquivo_entrada
 arquivo_base_cnefe = args.arquivo_base_cnefe
 
 sep_arq_entrada = args.separador_arq_entrada
 sep_arq_cnefe = args.separador_arq_cnefe
 
-# colunas
+# Colunas
 colunas_logradouro_entrada = args.colunas_logradouro_entrada
 colunas_logradouro_cnefe = args.colunas_logradouro_cnefe
 
@@ -95,12 +91,12 @@ coluna_bairro_cnefe = args.coluna_bairro_cnefe
 coluna_numero_entrada = args.coluna_numero_entrada
 coluna_numero_cnefe = args.coluna_numero_cnefe
 
-# dados do arquivo de entrada
+# Dados do arquivo de entrada
 coluna_latitude_verdadeira = args.coluna_latitude_verdadeira
 coluna_longitude_verdadeira = args.coluna_longitude_verdadeira
 coluna_cd_setor_verdadeira = args.coluna_cd_setor_verdadeira
 
-# dados do arquivo do cnefe
+# Dados do arquivo do cnefe
 coluna_latitude_resultante = args.coluna_latitude_resultante
 coluna_longitude_resultante = args.coluna_longitude_resultante
 coluna_cd_setor_resultante = args.coluna_cd_setor_resultante

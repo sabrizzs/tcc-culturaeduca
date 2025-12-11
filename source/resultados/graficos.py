@@ -5,9 +5,9 @@ import seaborn as sns
 import os
 from scipy.stats import gaussian_kde
 
-# ============================================================
-# 1) CONFIGURAÇÃO GERAL — APENAS CAMINHOS DOS ARQUIVOS
-# ============================================================
+# ---------------
+# Configuração
+# ---------------
 
 CIDADES = {
     "Diadema": {
@@ -40,9 +40,9 @@ CIDADES = {
 
 
 
-# ============================================================
-# 2) FUNÇÕES DE CLASSIFICAÇÃO AUTOMÁTICA
-# ============================================================
+# ---------------
+# Classificação
+# ---------------
 
 def classificar_setor(row):
     if row["setor_correspondente"] is True:
@@ -66,9 +66,9 @@ def contar_match_mismatch(df):
         "mismatch": categorias.get("Vizinho", 0) + categorias.get("Errado", 0)
     }
 
-# ============================================================
-# 4) GRÁFICO DE ROSCA — CORRETO / VIZINHO / ERRADO
-# ============================================================
+# ---------------
+# Gráfico de rosca - correto/vizinho/errado
+# ---------------
 
 def grafico_rosca_categorias(df_por_algoritmo, nome_cidade, output_dir):
 
@@ -121,7 +121,7 @@ def grafico_rosca_categorias(df_por_algoritmo, nome_cidade, output_dir):
         ncol=3,
         fontsize=16,
         frameon=False,
-        bbox_to_anchor=(0.5, 0.08)   # legenda sobe
+        bbox_to_anchor=(0.5, 0.08) 
     )
 
     #plt.tight_layout()
@@ -130,9 +130,9 @@ def grafico_rosca_categorias(df_por_algoritmo, nome_cidade, output_dir):
 
 
 
-# ============================================================
-# 5) GRÁFICO KDE — DISTRIBUIÇÃO DO ERRO DE DISTÂNCIA
-# ============================================================
+# ---------------
+# Gráfico KNE - Distribuição do erro de distância
+# ---------------
 
 def grafico_kde(df_all, nome_cidade, output_dir):
 
@@ -159,9 +159,9 @@ def grafico_kde(df_all, nome_cidade, output_dir):
 
 
 
-# ============================================================
-# 6) EXECUÇÃO AUTOMÁTICA PARA TODAS AS CIDADES
-# ============================================================
+# ---------------
+# Gera gráficos para as cidades
+# ---------------
 
 if __name__ == "__main__":
 
@@ -177,19 +177,17 @@ if __name__ == "__main__":
         for alg, arq in info["arquivos"].items():
 
             if not os.path.exists(arq):
-                print(f"⚠ Arquivo não encontrado: {arq} — pulando")
+                print(f"Arquivo não encontrado: {arq} — pulando")
                 continue
 
             df = pd.read_csv(arq)
             df["algoritmo"] = alg
             dfs_algoritmos[alg] = df
 
-        # Concatenado geral para o KDE
         df_all = pd.concat(dfs_algoritmos.values())
 
         # Gráficos
-        # grafico_rosca_match(dfs_algoritmos, cidade, output_dir)
         grafico_rosca_categorias(dfs_algoritmos, cidade, output_dir)
         grafico_kde(df_all, cidade, output_dir)
 
-        print(f"✔ Gráficos prontos em: {output_dir}/")
+        print(f"Gráficos prontos em: {output_dir}/")

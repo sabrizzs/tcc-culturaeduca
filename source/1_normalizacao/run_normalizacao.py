@@ -19,13 +19,10 @@ Responsabilidades:
 inicio = datetime.now()
 print("Início da execução:", inicio.strftime("%Y-%m-%d %H:%M:%S"))
 
-# normaliza o paramentro de dataset local_base_dados
+# Normaliza o paramentro de dataset local_base_dados
 def normalizar(texto: str) -> str:
-    # remove acentos
     texto = unicodedata.normalize('NFKD', texto).encode('ascii', 'ignore').decode('utf-8')
-    # tudo minúsculo
     texto = texto.lower()
-    # troca qualquer sequência de espaços por underline
     texto = re.sub(r'\s+', '_', texto)
     return texto
 
@@ -57,22 +54,22 @@ args = parser.parse_args()
 # Coloca os argumentos nas variaveis
 # -------------------
 
-# dados dos arquivos de dataset e do cnefe
+# Dados dos arquivos de dataset e do cnefe
 arquivo_dataset = args.arquivo_dataset
 
 sep_arq_dataset = args.separador_arq_dataset
 
-# colunas
+# Colunas
 colunas_logradouro_dataset = args.colunas_logradouro_dataset
 
 coluna_bairro_dataset = args.coluna_bairro_dataset
 
 coluna_numero_dataset = args.coluna_numero_dataset
 
-# dados do arquivo de dataset
+# Dados do arquivo de dataset
 coluna_cd_setor_dataset = args.coluna_cd_setor_dataset
 
-# variaveis para nome de arquivos finais
+# Variaveis para nome de arquivos finais
 base_dados = normalizar(args.local_base_dados) # local da base de dados para colocar no nome do arquivo final
 tipo_dados = normalizar(args.tipo_dados) # entrada ou cnefe
 

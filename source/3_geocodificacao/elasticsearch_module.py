@@ -24,12 +24,12 @@ def buscar_similares_elasticsearch(
     numero: str | int | None = None,
     w_endereco: float = 3.0,
     w_bairro: float = 1.0,
-    w_numero: float = 0.3,          # peso do número (bônus baixo)
-    numero_field: str = "numero",  # CAMPO NUMÉRICO (long)
-    gauss_scale: float = 2.0,       # quão “perto” conta muito (≈ metade do bônus em ±scale)
-    gauss_decay: float = 0.5,       # quanto decai na distância=scale
+    w_numero: float = 0.3,          # Peso do número (bônus baixo)
+    numero_field: str = "numero",   # Campo numérico (long)
+    gauss_scale: float = 2.0,       # Quão “perto” conta muito (≈ metade do bônus em ±scale)
+    gauss_decay: float = 0.5,       # Quanto decai na distância=scale
     collapse_on_code: bool = True,
-    max_hits: int = 50,             # NOVO: quantos candidatos trazer do ES
+    max_hits: int = 50,             # Quantos candidatos trazer do ES
 ):
     def _wrap_num_proximity(query, numero_int):
         # Aplica bônus por proximidade do número (gauss)
@@ -64,7 +64,7 @@ def buscar_similares_elasticsearch(
             body["collapse"] = {"field": "original_index"}
         return es.search(index=index_name, **body)
 
-    # parse do número para inteiro (só aplica proximidade se der)
+    # Parse do número para inteiro (só aplica proximidade se der)
     numero_int = None
     if numero is not None:
         try:
@@ -72,7 +72,7 @@ def buscar_similares_elasticsearch(
         except ValueError:
             numero_int = None  # ignora proximidade se não for inteiro
 
-    # --- Tentativa 1: should com boosts individuais ---
+    # Tentativa 1: should com boosts individuais
     should = []
     if endereco:
         should.append({
@@ -109,7 +109,7 @@ def buscar_similares_elasticsearch(
     res = _search(query1)
     hits = res.get("hits", {}).get("hits", [])
 
-    # --- Tentativa 2: cross_fields (endereco+bairro combinados)
+    # Tentativa 2: cross_fields (endereco+bairro combinados)
     if not hits and endereco and bairro:
         combined = f"{endereco} {bairro}"
         base2 = {
@@ -124,7 +124,7 @@ def buscar_similares_elasticsearch(
         res = _search(query2)
         hits = res.get("hits", {}).get("hits", [])
 
-    # --- Tentativa 3: most_fields (mais permissivo)
+    # Tentativa 3: most_fields (mais permissivo)
     if not hits and (endereco or bairro):
         combined = " ".join([x for x in [endereco, bairro] if x])
         base3 = {
@@ -138,14 +138,14 @@ def buscar_similares_elasticsearch(
         res = _search(query3)
         hits = res.get("hits", {}).get("hits", [])
 
-    # --- Último recurso: usa match_all mas ainda prioriza número próximo (se houver)
+    # Último recurso: usa match_all mas ainda prioriza número próximo (se houver)
     if not hits:
         base4 = {"match_all": {}}
         query4 = _wrap_num_proximity(base4, numero_int) if numero_int is not None else base4
         res = _search(query4, size=1)
         hits = res.get("hits", {}).get("hits", [])
         if not hits:
-            # nada encontrado mesmo
+            # Nada encontrado mesmo
             return [(None, None, 0.0, None)]
         h = hits[0]
         s = h.get("_source", {})
@@ -156,7 +156,7 @@ def buscar_similares_elasticsearch(
             s.get("original_index"),
         )]
 
-    # --- Normaliza pelo melhor score e devolve TODOS os hits ---
+    # Normaliza pelo melhor score e devolve TODOS os hits ---
     top_score = hits[0].get("_score") or 1.0
     similares = []
     for h in hits:
@@ -256,7 +256,7 @@ def executar_elasticsearch(
             else:
                 score_numero = None
 
-            # similaridade do bairro
+            # Similaridade do bairro
             score_bairro = (
                 fuzz.token_set_ratio(bairro1, bairro2_texto)
                 if (bairro1 or bairro2_texto)
@@ -288,16 +288,6 @@ def executar_elasticsearch(
             for (idx2, score_texto, score_numero, score_final, score_bairro) in matches_final
             if (score_final is not None and round(score_final, 2) == melhor_score_final_round)
         ]
-
-        # Sugestões top N pelo score final (para exibir na coluna sugestoes_topN)
-        # sugestoes_formatadas = []
-        # for idx2_sug, score_texto_sug, score_numero_sug, score_final_sug, score_bairro_sug in matches_final[:top_n]:
-        #     endereco_original = formatar_endereco(df2.loc[idx2_sug], colunas_logradouro2_original)
-        #     numero = df2.loc[idx2_sug, col_num2] if col_num2 else ""
-        #     score_final_str = f"{score_final_sug:.0f}" if score_final_sug is not None else "N/A"
-        #     sugestoes_formatadas.append(
-        #         f"{endereco_original} {numero} | Score Final: {score_final_str}"
-        #     )
 
         # Para CADA match empatado, cria uma linha no resultado
         for (idx2, score_texto, score_numero, score_final, score_bairro) in melhores_matches:

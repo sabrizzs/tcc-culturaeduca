@@ -97,50 +97,6 @@ def indexar_enderecos_elasticsearch(
         print("Erro geral:", str(e))
         return False
 
-# def indexar_enderecos_elasticsearch(df, index_name="enderecos_ref", recreate=True, col_logradouro="logradouro_normalizado", col_bairro="bairro_normalizado", col_num="numero_int"):
-#     try:
-#         es = Elasticsearch(
-#             "https://localhost:9200",
-#             basic_auth=("elastic", ELASTICSEARCH_PW),
-#             ca_certs="/etc/elasticsearch/certs/http_ca.crt",
-#         )
-
-#         # Verifica se o Elasticsearch está acessível
-#         if not es.ping():
-#             raise ConnectionError("Não foi possível conectar ao Elasticsearch.")
-        
-#         if recreate:
-#             # se existir indice ele deleta para recriar
-#             if es.indices.exists(index=index_name):
-#                 es.indices.delete(index=index_name)
-
-#             es.indices.create(index=index_name, mappings={
-#                 "properties": {
-#                     "logradouro_normalizado": {"type": "text"},
-#                     "bairro_normalizado": {"type": "text"},
-#                     "numero": {"type": "integer"},
-#                     "original_index": {"type": "integer"}
-#                 }
-#             })
-
-#         actions = [
-#             {
-#                 "_index": index_name,
-#                 "_id": i,
-#                 "_source": {
-#                     "logradouro_normalizado": row[col_logradouro],
-#                     "bairro_normalizado": row[col_bairro],
-#                     "numero": int(row[col_num]),
-#                     "original_index": i
-#                 }
-#             }
-#             for i, row in df.iterrows()
-#         ]
-
-#         helpers.bulk(es, actions)
-#     except Exception as e:
-#         print(str(e))
-
 def indexar_elasticsearch(df2):
     """
     Compara endereços usando Elasticsearch.

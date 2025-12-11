@@ -169,7 +169,6 @@ def normalizar_datasets(df: pd.DataFrame,
     - col_bairro: coluna de bairro
     - cd_setor: coluna do setor censitário
     """
-    # Prepara DataFrames
     df_normalizado = preparar_dataframe(df, colunas_logradouro, col_num, col_bairro, cd_setor)
 
     return df_normalizado

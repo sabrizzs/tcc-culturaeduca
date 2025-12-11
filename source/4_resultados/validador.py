@@ -1,34 +1,29 @@
 import pandas as pd
 
-# ---------------- CONFIGURAÇÕES ----------------
+# Configurações
 
-# Arquivo gabarito (onde está "a verdade")
+# Arquivo gabarito 
 CAMINHO_GABARITO = "results/result_rapidfuzz/result_20251012_142504_analisado_gabarito.xlsx"
 
-# Arquivo NOVO de resultados que você quer validar
-# (o que o run_comparador gerou, dentro de results/result_llm/)
 CAMINHO_RESULTADO_NOVO = r"results\result_llm\result_20251125_115213.xlsx"  # <<< troque aqui
 
-# Nome da planilha dentro do arquivo novo (run_comparador usa "Enderecos")
 SHEET_RESULTADO_NOVO = "Enderecos"
 
 # Arquivo de saída com o relatório de validação
 CAMINHO_RELATORIO = "relatorio_validacao_gabarito.xlsx"
 
 
-# ---------------- CARGA DOS DADOS ----------------
+# Carrega dados
 
 print("Carregando gabarito...")
-df_gab = pd.read_excel(CAMINHO_GABARITO)  # primeiro sheet
+df_gab = pd.read_excel(CAMINHO_GABARITO) 
 
 print("Carregando resultado novo...")
 df_novo = pd.read_excel(CAMINHO_RESULTADO_NOVO, sheet_name=SHEET_RESULTADO_NOVO)
 
 # Verifica se idx_df1 é único no gabarito (esperado)
 if not df_gab["idx_df1"].is_unique:
-    raise ValueError("idx_df1 não é único no gabarito! Isso complica a validação.")
-
-# ---------------- JUNÇÃO PELO idx_df1 ----------------
+    raise ValueError("idx_df1 não é único no gabarito.")
 
 # Sufixos diferentes para distinguir colunas
 df_merge = df_gab.merge(
@@ -44,7 +39,7 @@ if faltando > 0:
     print(f"Atenção: {faltando} registros do gabarito não foram encontrados no resultado novo (idx_df1 sem match).")
 
 
-# ---------------- CRITÉRIO DE ACERTO/ERRO ----------------
+# Critério de acerto/erro
 
 # Acerto = idx_df2 igual no gabarito e no resultado novo
 df_merge["acertou_idx_df2"] = df_merge["idx_df2_gab"] == df_merge["idx_df2_novo"]
@@ -60,9 +55,8 @@ print(f"Erros:                      {erros}")
 if total > 0:
     print(f"Taxa de acerto:             {acertos/total:.2%}")
 
-# ---------------- MONTAR RELATÓRIO DETALHADO ----------------
+# Monta relatório
 
-# Vamos montar colunas mais “legíveis” para análise:
 colunas_relatorio = [
     "idx_df1",
 
@@ -89,13 +83,11 @@ colunas_relatorio = [
     "acertou_idx_df2",
 ]
 
-# Nem sempre todas essas colunas existem nos dois lados;
-# então vamos manter só as que realmente existem no df_merge
+# Merge das colunas
 colunas_relatorio = [c for c in colunas_relatorio if c in df_merge.columns]
 
 df_relatorio = df_merge[colunas_relatorio].copy()
 
-# Ordena deixando erros primeiro (pra você olhar com calma)
 df_relatorio = df_relatorio.sort_values(by=["acertou_idx_df2", "similaridade_final_novo"], ascending=[True, False])
 
 # Salva o relatório em Excel

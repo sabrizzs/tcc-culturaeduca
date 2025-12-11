@@ -44,10 +44,10 @@ def executar_rapidfuzz(
     # --------------------------
     def processar_linha(idx1):
         print(f"linha {idx1}")
-        # logradouro normalizado (chave para busca)
+        # Logradouro normalizado (chave para busca)
         endereco1_norm = df1.at[idx1, colunas_logradouro1]
 
-        # logradouro/bairro "originais" para exibição
+        # Logradouro/bairro "originais" para exibição
         endereco1_fmt = formatar_endereco(
             df1.loc[idx1],
             colunas_logradouro1_original + ([col_bairro1_original] if col_bairro1_original else [])
@@ -60,7 +60,7 @@ def executar_rapidfuzz(
         lon1 = df1.at[idx1, longitude_verdadeira] if longitude_verdadeira else None
         setor1 = df1.at[idx1, cd_setor_verdadeiro] if cd_setor_verdadeiro else None
 
-        # fuzzy apenas nos melhores candidatos
+        # Fuzzy apenas nos melhores candidatos
         matches_all = process.extract(
             endereco1_norm,
             df2[colunas_logradouro2],
@@ -75,7 +75,7 @@ def executar_rapidfuzz(
             num2 = df2.at[idx2, col_num2] if col_num2 else None
             bairro2 = df2.at[idx2, col_bairro2] if col_bairro2 else None
 
-            # similaridade do número
+            # Similaridade do número
             if num1 is not None and num2 is not None:
                 try:
                     n1 = float(num1)
@@ -90,14 +90,14 @@ def executar_rapidfuzz(
             else:
                 score_num = None
 
-            # similaridade do bairro
+            # Similaridade do bairro
             score_bairro = (
                 fuzz.token_set_ratio(bairro1, bairro2)
                 if (bairro1 or bairro2)
                 else None
             )
 
-            # score final ponderado
+            # Score final ponderado
             score_final = (
                 score_log * peso_logradouro +
                 (score_num if score_num is not None else score_log) * peso_numero +
@@ -154,7 +154,7 @@ def executar_rapidfuzz(
                     matches_final.remove(melhor_exato)
                     matches_final.insert(0, melhor_exato)
 
-        # agora o melhor candidato está em matches_final[0]
+        # Agora o melhor candidato está em matches_final[0]
         melhor_score = matches_final[0][4]
 
         # --------------------------
@@ -165,11 +165,11 @@ def executar_rapidfuzz(
         chaves_vistas = set()
 
         for idx2, score_log, score_num, score_bairro, score_final in matches_final:
-            # só mantém empates na maior similaridade_final
+            # Só mantém empates na maior similaridade_final
             if abs(score_final - melhor_score) > 1e-9:
                 continue
 
-            # dados do df2 para este candidato
+            # Dados do df2 para este candidato
             cod_unico2 = df2.at[idx2, cod_unico_endereco] if cod_unico_endereco else None
             endereco2_fmt = formatar_endereco(
                 df2.loc[idx2],
@@ -182,7 +182,7 @@ def executar_rapidfuzz(
             lon2 = df2.at[idx2, longitude_resultante] if longitude_resultante else None
             setor2 = df2.at[idx2, cd_setor_resultante] if cd_setor_resultante else None
 
-            # chave para evitar duplicatas (define o que é "linha igual")
+            # Chave para evitar duplicatas (define o que é "linha igual")
             chave = (
                 endereco_df1 := endereco1_fmt,
                 numero_df1 := num1,
@@ -198,7 +198,7 @@ def executar_rapidfuzz(
                 setor2,
             )
 
-            # se já vimos essa combinação, pula
+            # Se já vimos essa combinação, pula
             if chave in chaves_vistas:
                 continue
             chaves_vistas.add(chave)
@@ -241,7 +241,7 @@ def executar_rapidfuzz(
     with ThreadPoolExecutor(max_workers=workers) as executor:
         resultados_por_idx = list(executor.map(processar_linha, df1.index))
 
-    # resultados_por_idx é uma lista de listas -> achata
+    # Resultados_por_idx é uma lista de listas -> achata
     resultados = [linha for lista in resultados_por_idx for linha in lista]
 
     return pd.DataFrame(resultados)
