@@ -3,9 +3,11 @@ title: "TCC CulturaEduca"
 description: "Projeto de TCC sobre visualização de dados e software livre para geocodificação aplicados à plataforma CulturaEduca."
 theme: just-the-docs
 
+# URL e baseurl (Project Page)
 url: "https://sabrizzs.github.io"
 baseurl: "/tcc-culturaeduca"
 
+# Navegação e busca
 nav_enabled: true
 search_enabled: true
 search:
@@ -14,16 +16,21 @@ search:
   preview_words_before: 5
   preview_words_after: 10
 
+# Links auxiliares
 aux_links:
   "Repositório no GitHub":
     - "//github.com/sabrizzs/tcc-culturaeduca"
 
+# Voltar ao topo
 back_to_top: true
 back_to_top_text: "Voltar ao topo"
 
+# Mermaid (opcional)
 mermaid:
   version: "9.1.3"
 
+# Excluir arquivos que não devem ser processados
 exclude:
-  - node_modules/
-  - vendor/
+  - Gemfile
+  - Gemfile.lock
+  - LICENSE
