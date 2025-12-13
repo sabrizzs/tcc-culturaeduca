@@ -1,64 +1,73 @@
 ---
-title: Proposta
+title: Início
 layout: home
 nav_order: 1
 ---
 
-# Implementação de dashboards e desenvolvimento de Software Livre para geocodificação aplicados à plataforma CulturaEduca
+# Geocodificação de endereços brasileiros aplicada à plataforma CulturaEduca
 
-### Orientadora
-
-Profa. Dra. Kelly Rosa Braghetto
-
-### Integrantes
-
-Sabrina Araújo da Silva, NUSP: 12566182
-
-Samantha Miyahira, NUSP: 11797261
-
-## Introdução
-
-A plataforma **CulturaEduca** tem como objetivo centralizar e disponibilizar informações educacionais e socioeconômicas para apoiar decisões locais e fortalecer ações comunitárias. Atualmente, a plataforma necessita de dashboards interativos que facilitem a análise dos dados, bem como de uma solução própria e gratuita de geocodificação baseada no CNEFE, evitando a dependência de APIs externas.
-
-## Objetivo geral
-
-Desenvolver dashboards interativos e uma ferramenta de geocodificação de software livre integrada à plataforma CulturaEduca, melhorando a visualização e o uso dos dados.
-
-## Objetivos específicos
-
-1. Levantar as necessidades dos usuários da CulturaEduca para orientar o desenvolvimento dos dashboards.
-2. Avaliar ferramentas livres como **Apache Superset** e **Grafana** para a criação das visualizações.
-3. Criar protótipos funcionais de dashboards integrados à plataforma.
-4. Analisar a ferramenta **GeocodeBR** e desenvolver melhorias ou uma nova versão em Python, baseada no **CNEFE**.
-5. Validar as ferramentas com usuários reais da plataforma.
-
-## Justificativa
-
-A clareza e acessibilidade dos dados geoespaciais são fundamentais para ações eficazes na educação e em políticas públicas. Este projeto visa melhorar a experiência dos usuários da CulturaEduca por meio de visualizações intuitivas e geocodificação eficiente e gratuita.
-
-## Metodologia
-
-- Análise de dados e implementação de dashboards na plataforma.
-- Comparação entre ferramentas de visualização open source.
-- Desenvolvimento com foco em tecnologias como **PostgreSQL/PostGIS** e **GeoServer**.
-- Estudo da performance do GeocodeBR e desenvolvimento em Python.
-- Testes com usuários finais para avaliar usabilidade e desempenho.
-
-## Cronograma
-
-| Mês             | Atividades                                                                 |
-|------------------|---------------------------------------------------------------------------|
-| Abril - Maio     | Revisão bibliográfica e levantamento das necessidades                     |
-| Maio - Junho     | Escolha e prototipação dos dashboards                                     |
-| Junho - Agosto   | Avaliação e desenvolvimento da ferramenta de geocodificação               |
-| Setembro - Outubro | Integração dos dashboards e ferramenta à plataforma                    |
-| Outubro          | Testes com usuários e refinamento                                         |
-| Outubro - Novembro | Redação e finalização do TCC                                           |
-
-## Conclusão
-
-Este projeto busca ampliar a capacidade de análise e uso de dados da plataforma CulturaEduca, promovendo uma gestão mais inovadora , participativa e eficiente das informações educacionais e culturais.
+Trabalho de Conclusão de Curso desenvolvido no Instituto de Matemática e Estatística da USP, com foco em geocodificação de endereços brasileiros, software livre e análise territorial aplicada à plataforma **CulturaEduca**.
 
 ---
 
-> Acesse o [repositório no GitHub](https://github.com/sabrizzs/tcc-culturaeduca) para mais detalhes técnicos sobre o projeto.
+## Autoria e orientação
+
+**Autora:**  
+Sabrina Araújo da Silva — NUSP 12566182
+Samantha Miyahira — NUSP 11797261
+
+**Orientadora:**  
+Profa. Dra. Kelly Rosa Braghetto  
+
+---
+
+## Contexto e motivação
+
+O trabalho com endereços no Brasil envolve, inevitavelmente, uma grande variedade de formas de escrita. Um mesmo logradouro pode aparecer abreviado em uma base de dados, por extenso em outra ou conter erros de digitação e informações incompletas. Embora essas variações pareçam pequenas, elas se tornam um obstáculo concreto quando se busca localizar endereços com precisão no território.
+
+O processo responsável por essa localização é a **geocodificação**, que transforma uma descrição textual de endereço em coordenadas geográficas. Plataformas que realizam análises territoriais dependem diretamente dessa conversão. Esse é o caso da plataforma **CulturaEduca**, que utiliza dados georreferenciados para analisar o entorno de escolas, equipamentos culturais e serviços públicos, apoiando diagnósticos territoriais e o planejamento de ações comunitárias e políticas públicas.
+
+No entanto, a geocodificação não se limita à obtenção de coordenadas. Parte significativa das análises do CulturaEduca depende da **associação correta entre o endereço e o setor censitário correspondente**, que é a menor unidade territorial utilizada pelo IBGE para fins estatísticos. Quando um endereço é vinculado ao setor incorreto, toda a interpretação espacial é comprometida.
+
+Tentativas iniciais de utilizar soluções existentes, como o pacote **GeocodeBR**, revelaram limitações práticas, especialmente na identificação correta dos setores censitários. Essas dificuldades motivaram o desenvolvimento de uma solução própria, baseada em **software livre** e alinhada ao padrão de referência adotado pelo IBGE.
+
+---
+
+## Objetivo do trabalho
+
+O objetivo central deste trabalho é desenvolver um sistema capaz de lidar com a heterogeneidade natural dos endereços brasileiros e produzir uma correspondência consistente entre um endereço textual e o registro mais provável no **Cadastro Nacional de Endereços para Fins Estatísticos (CNEFE)**.
+
+Para isso, foi implementado um sistema modular que combina diferentes estratégias de correspondência aproximada de strings, permitindo avaliar como cada abordagem se comporta diante de abreviações, variações de grafia e dados incompletos.
+
+---
+
+## Abordagem adotada
+
+O sistema desenvolvido explora três estratégias complementares de correspondência:
+
+- **Abordagem lexical**, baseada na biblioteca *RapidFuzz*, que utiliza métricas de similaridade textual e operações sobre tokens;
+- **Abordagem baseada em indexação**, utilizando o *Elasticsearch*, que combina mecanismos de busca, tokenização e ranqueamento;
+- **Abordagem semântica**, baseada em *embeddings* gerados por modelos de linguagem, permitindo comparar endereços a partir de seu conteúdo semântico.
+
+Todas as abordagens operam sobre entradas previamente normalizadas e são avaliadas a partir de critérios espaciais, com ênfase na correta vinculação dos endereços aos setores censitários.
+
+---
+
+## Cronograma
+
+| Mês               | Atividades                                                                 |
+|-------------------|-----------------------------------------------------------------------------|
+| Abril – Maio      | Revisão bibliográfica e levantamento das necessidades                        |
+| Maio – Junho      | Escolha e prototipação das abordagens e ferramentas                          |
+| Junho – Agosto    | Desenvolvimento da ferramenta de geocodificação                              |
+| Setembro – Outubro| Avaliação dos métodos e integração à plataforma CulturaEduca                |
+| Outubro           | Testes, análise dos resultados e refinamento                                 |
+| Outubro – Novembro| Redação e finalização do Trabalho de Conclusão de Curso                      |
+
+---
+
+## Código-fonte
+
+A implementação completa do sistema foi disponibilizada em um repositório público, de forma a permitir a reprodutibilidade dos experimentos e o reaproveitamento da solução por outras iniciativas acadêmicas e públicas.
+
+👉 [Repositório no GitHub](https://github.com/sabrizzs/tcc-culturaeduca)
