@@ -1,14 +1,18 @@
-### Executar Normalização
+## Visão Geral
+
+Esta etapa é responsável por normalizar os datasets de entrada e do cnefe para serem utilizados nas próximas etapas.
+
+## Executar Normalização
 
 `python run_normalizacao.py @<nome_do_arquivo.txt>`
 
-### Arquivos de input
+## Arquivos de input
 
 Nos arquivos `input_normalizacao_cnefe.txt` e `input_normalizacao_entrada.txt`, substituir os textos de cada arquivo conforme as informações abaixo, de acordo com a base de dados que está utilizando:
 
 Observação: substitua o caminho do arquivo abaixo de ``--arquivo_dataset`
 
-#### Diadema
+### Diadema
 
 1) cnefe
 
@@ -54,7 +58,7 @@ NU_ENDEREC
 CD_SETOR
 ```
 
-#### Município de São Paulo
+### Município de São Paulo
 
 1) cnefe
 
@@ -100,7 +104,7 @@ nu_endereco
 cd_setor_2022
 ```
 
-#### Rondônia
+### Rondônia
 
 1) cnefe
 

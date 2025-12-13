@@ -3,9 +3,11 @@
 import pandas as pd
 import time
 from elasticsearch import Elasticsearch, helpers
+import os
 
 """
-Run comparador - script principal
+Indexacao Elasticsearch
+
 Responsabilidades:
 1. Carregar arquivo normalizado do cnefe.
 2. Indexar os dados do arquivo cnefe.
@@ -16,7 +18,7 @@ Responsabilidades:
 # -------------------
 
 arquivo_cnefe_normalizado = "/home/samantha/tcc-culturaeduca/source/nov25/api/comparador_sem_tipo_logradouro/1_normalizacao/datasets_normalizados/normalizado_sao_paulo_cnefe.csv" # dados dos arquivos do cnefe
-ELASTICSEARCH_PW = "HO2Vv2MWa=jTr-EHSmEt" # chave do elasticsearch
+ELASTICSEARCH_PW = os.getenv("ELASTIC_PASSWORD", "sua_senha") # chave do elasticsearch
 
 # -------------------
 # Funções de indexação

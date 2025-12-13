@@ -9,7 +9,6 @@ from sentence_transformers import SentenceTransformer
 # Configurações
 # --------------------
 
-# ARQUIVO_ENTRADA = "/home/samantha/tcc-culturaeduca/source/1_normalizacao/datasets_normalizados/normalizado_sao_paulo_cnefe.csv"
 ARQUIVO_ENTRADA = "/home/samantha/tcc-culturaeduca/source/1_normalizacao/datasets_normalizados/normalizado_rondonia_cnefe.csv"
 
 COL_LOGRADOURO = "logradouro_normalizado"
@@ -17,13 +16,12 @@ COL_NUMERO = "numero_int"
 COL_BAIRRO = "bairro_normalizado"
 
 COD_UNICO = "COD_UNICO_ENDERECO" # ATENÇAO COM O NOME DESTA COLUNA
-# COD_UNICO = "_id" # ATENÇAO COM O NOME DESTA COLUNA
 
 COLS_NECESSARIAS = [COD_UNICO, COL_LOGRADOURO, COL_NUMERO, COL_BAIRRO]
 
 PG_DSN = os.getenv(
     "PG_DSN",
-    "dbname=tcc user=postgres password=password host=localhost port=5432",
+    "dbname=<nome_db> user=<usuario> password=<senha_db> host=localhost port=5432",
 )
 
 TABELA_EMBEDDINGS = "cnefe_rondonia_embeddings"
@@ -83,7 +81,7 @@ def main():
     conn.commit()
 
     print("Lendo CSV em chunks...")
-    # reader = pd.read_csv(ARQUIVO_ENTRADA, sep=";", dtype=str, chunksize=CHUNK_ROWS)
+    
     reader = pd.read_csv(
         ARQUIVO_ENTRADA,
         sep=";",
