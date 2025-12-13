@@ -57,7 +57,7 @@ A clareza e acessibilidade dos dados geoespaciais são fundamentais para ações
 
 ## Conclusão
 
-Este projeto busca ampliar a capacidade de análise e uso de dados da plataforma CulturaEduca, promovendo uma gestão mais inovadora, participativa e eficiente das informações educacionais e culturais.
+Este projeto busca ampliar a capacidade de análise e uso de dados da plataforma CulturaEduca, promovendo uma gestão mais inovadora , participativa e eficiente das informações educacionais e culturais.
 
 ---
 
