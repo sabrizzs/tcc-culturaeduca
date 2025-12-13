@@ -24,13 +24,13 @@ Profa. Dra. Kelly Rosa Braghetto
 
 ## Contexto e motivação
 
-O trabalho com endereços no Brasil envolve, inevitavelmente, uma grande variedade de formas de escrita. Um mesmo logradouro pode aparecer abreviado em uma base de dados, por extenso em outra ou conter erros de digitação e informações incompletas. Embora essas variações pareçam pequenas, elas se tornam um obstáculo concreto quando se busca localizar endereços com precisão no território.
+Endereços no Brasil apresentam grande variação de escrita, com abreviações, grafias distintas e informações incompletas. Essas diferenças dificultam a localização precisa dos endereços no território.
 
-O processo responsável por essa localização é a **geocodificação**, que transforma uma descrição textual de endereço em coordenadas geográficas. Plataformas que realizam análises territoriais dependem diretamente dessa conversão. Esse é o caso da plataforma **CulturaEduca**, que utiliza dados georreferenciados para analisar o entorno de escolas, equipamentos culturais e serviços públicos, apoiando diagnósticos territoriais e o planejamento de ações comunitárias e políticas públicas.
+A **geocodificação** converte endereços textuais em coordenadas geográficas e é fundamental para plataformas de análise territorial. A plataforma **CulturaEduca**, por exemplo, utiliza dados georreferenciados para analisar o entorno de escolas, equipamentos culturais e serviços públicos, apoiando análises territoriais e o planejamento de ações e políticas públicas.
 
-No entanto, a geocodificação não se limita à obtenção de coordenadas. Parte significativa das análises do CulturaEduca depende da **associação correta entre o endereço e o setor censitário correspondente**, que é a menor unidade territorial utilizada pelo IBGE para fins estatísticos. Quando um endereço é vinculado ao setor incorreto, toda a interpretação espacial é comprometida.
+Além das coordenadas, essas análises dependem da **associação correta do endereço ao setor censitário**, a menor unidade territorial definida pelo IBGE. Vinculações incorretas comprometem diretamente a interpretação espacial dos dados.
 
-Tentativas iniciais de utilizar soluções existentes, como o pacote **GeocodeBR**, revelaram limitações práticas, especialmente na identificação correta dos setores censitários. Essas dificuldades motivaram o desenvolvimento de uma solução própria, baseada em **software livre** e alinhada ao padrão de referência adotado pelo IBGE.
+Testes com soluções existentes, como o **GeocodeBR**, evidenciaram limitações na identificação adequada dos setores censitários, motivando o desenvolvimento de uma solução própria, baseada em **software livre** e alinhada ao padrão adotado pelo IBGE.
 
 ---
 
@@ -68,12 +68,12 @@ Todas as abordagens operam sobre entradas previamente normalizadas e são avalia
 
 ## Trabalho final
 
-**Monografia (PDF)**:
+**Monografia**:
 
 [PDF do trabalho final](./monografia.pdf)
 
 **Repositório do código**
 
-A implementação completa do sistema foi disponibilizada em um repositório público, de forma a permitir a reprodutibilidade dos experimentos e o reaproveitamento da solução por outras iniciativas acadêmicas e públicas.
+A implementação do sistema foi disponibilizada em repositório público, reunindo os principais componentes do trabalho desenvolvido.
 
 [Repositório no GitHub](https://github.com/sabrizzs/tcc-culturaeduca)
