@@ -4,7 +4,7 @@ layout: home
 nav_order: 1
 ---
 
-# Geocodificação de endereços brasileiros aplicada à plataforma CulturaEduca
+# Geocodificação de Endereços Brasileiros com Abordagens Lexicais, Indexadas e Semânticas
 
 Trabalho de Conclusão de Curso desenvolvido no Instituto de Matemática e Estatística da USP, com foco em geocodificação de endereços brasileiros, software livre e análise territorial aplicada à plataforma **CulturaEduca**.
 
@@ -12,8 +12,9 @@ Trabalho de Conclusão de Curso desenvolvido no Instituto de Matemática e Estat
 
 ## Autoria e orientação
 
-**Autora:**  
+**Autoras:**  
 Sabrina Araújo da Silva — NUSP 12566182
+
 Samantha Miyahira — NUSP 11797261
 
 **Orientadora:**  
@@ -65,8 +66,14 @@ Todas as abordagens operam sobre entradas previamente normalizadas e são avalia
 
 ---
 
-## Código-fonte
+## Trabalho final
+
+**Monografia (PDF)**:
+
+[PDF do trabalho final](./monografia.pdf)
+
+**Repositório do código**
 
 A implementação completa do sistema foi disponibilizada em um repositório público, de forma a permitir a reprodutibilidade dos experimentos e o reaproveitamento da solução por outras iniciativas acadêmicas e públicas.
 
-👉 [Repositório no GitHub](https://github.com/sabrizzs/tcc-culturaeduca)
+[Repositório no GitHub](https://github.com/sabrizzs/tcc-culturaeduca)
