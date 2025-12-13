@@ -23,16 +23,16 @@ CIDADES = {
         "arquivos": {
             "RapidFuzz": "resultado_final_rondonia_rapidfuzz.csv",
             "ElasticSearch": "resultado_final_rondonia_elasticsearch.csv",
-            "GeoCodeBR": "resultado_final_geocodebr_ro.csv",
+            "GeoCodeBR": "resultado_final_rondonia_geocodebr.csv",
             "LLM": "resultado_final_rondonia_llm.csv",
         }
     },
 
     "São Paulo": {
         "arquivos": {
-            "RapidFuzz": "resultado_final_sao_paulo_rapidfuzz.csv",
-            "ElasticSearch": "resultado_final_sao_paulo_elasticsearch.csv",
-            "GeoCodeBR": "resultado_final_geocodebr_mun_sp.csv",
+            "RapidFuzz": "resultado_final_sp_rapidfuzz.csv",
+            "ElasticSearch": "resultado_final_sp_elasticsearch.csv",
+            "GeoCodeBR": "resultado_final_sp_geocodebr.csv",
             # "LLM": "",
         }
     }
@@ -88,7 +88,7 @@ def grafico_rosca_categorias(df_por_algoritmo, nome_cidade, output_dir):
         labels = ["Correto", "Vizinho", "Errado"]
         valores = [categorias.get(k, 0) for k in labels]
 
-        ax.pie(
+        wedges, texts, autotexts = ax.pie(
             valores,
             colors=[cores[k] for k in labels],
             autopct='%1.1f%%',
@@ -97,11 +97,15 @@ def grafico_rosca_categorias(df_por_algoritmo, nome_cidade, output_dir):
             wedgeprops={'width': 0.35, 'edgecolor': 'white'}
         )
 
+        for t in autotexts:
+            t.set_fontsize(18)
+            t.set_weight("bold")
+
         ax.set_title(alg, fontsize=19, pad=-40)
 
     plt.suptitle(
         f"Percentual de pontos no setor censitário correto — {nome_cidade}",
-        fontsize=20,
+        fontsize=23,
         weight="bold"
     )
 
@@ -118,9 +122,9 @@ def grafico_rosca_categorias(df_por_algoritmo, nome_cidade, output_dir):
         handles=legendas,
         loc='lower center',
         ncol=3,
-        fontsize=16,
+        fontsize=20,
         frameon=False,
-        bbox_to_anchor=(0.5, 0.08) 
+        bbox_to_anchor=(0.5, 0.08)  
     )
 
     #plt.tight_layout()
@@ -133,6 +137,8 @@ def grafico_rosca_categorias(df_por_algoritmo, nome_cidade, output_dir):
 # Gráfico KNE - Distribuição do erro de distância
 # ---------------
 
+import matplotlib.ticker as mtick
+
 def grafico_kde(df_all, nome_cidade, output_dir):
 
     df_all = df_all.copy()
@@ -141,22 +147,62 @@ def grafico_kde(df_all, nome_cidade, output_dir):
 
     plt.figure(figsize=(10, 6))
 
-    sns.kdeplot(
+    ax = sns.kdeplot(
         data=df_all,
         x="desvio_metros",
         hue="algoritmo",
-        #clip=(0, None),
         linewidth=2.5
     )
 
+    # reescala o eixo Y para 0–1
+    ymax = max(line.get_ydata().max() for line in ax.lines)
+    for line in ax.lines:
+        line.set_ydata(line.get_ydata() / ymax)
+
+    ax.set_ylim(0, 1.05)
+    ax.set_ylabel("Densidade relativa (0–1)", fontsize=17)
+
+    plt.xticks(fontsize=16)
+    plt.yticks(fontsize=16)
+
+    ax.yaxis.set_major_locator(mtick.MultipleLocator(0.2))
+    ax.yaxis.set_major_formatter(mtick.FormatStrFormatter('%.1f'))
+
     plt.title(f"Distribuição do erro de distância (real vs encontrado) — {nome_cidade}", fontsize=18, weight="bold")
-    plt.xlabel("Erro de distância (m)", fontsize=12)
-    plt.ylabel("Densidade de ocorrências", fontsize=12)
-    #plt.tight_layout()
-    plt.savefig(f"{output_dir}/kde_distancia.png", dpi=300)
+    plt.xlabel("Erro de distância (m)", fontsize=17)
+
+    plt.savefig(f"{output_dir}/kde_distancia_relativo.png", dpi=300)
     plt.close()
 
 
+# ============================================================
+# Histograma Logarítmico
+# ============================================================
+
+def grafico_hist_abs(df_all, nome_cidade, output_dir):
+    df = df_all.copy()
+    df = df[np.isfinite(df["desvio_metros"])]
+    df = df[df["desvio_metros"] >= 0]
+    df["desvio_metros"] = df["desvio_metros"].clip(lower=1)
+
+    plt.figure(figsize=(10, 6))
+
+    sns.histplot(
+        data=df,
+        x="desvio_metros",
+        hue="algoritmo",
+        element="step",
+        stat="count",     
+        common_norm=False,
+        bins=80           
+    )
+
+    plt.title(f"Distribuição absoluta do erro de distância — {nome_cidade}", fontsize=18, weight="bold")
+    plt.xlabel("Erro de distância (m)", fontsize=12)
+    plt.ylabel("Quantidade de pontos", fontsize=12)
+
+    plt.savefig(f"{output_dir}/hist_abs_distancia.png", dpi=300)
+    plt.close()
 
 # ---------------
 # Gera gráficos para as cidades
