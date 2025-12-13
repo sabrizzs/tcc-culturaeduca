@@ -80,4 +80,4 @@ A implementação do sistema foi disponibilizada em repositório público, reuni
 
 **Poster**:
 
-[Poster do trabalho final](/tcc-culturaeduca/docs/poster.pdf))
+[Poster do trabalho final](/tcc-culturaeduca/docs/poster.pdf)
