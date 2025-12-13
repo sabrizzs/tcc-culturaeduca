@@ -1,6 +1,6 @@
 ### Executar Normalização
 
-`python run_normalizacao @<nome_do_arquivo.txt>`
+`python run_normalizacao.py @<nome_do_arquivo.txt>`
 
 ### Arquivos de input
 

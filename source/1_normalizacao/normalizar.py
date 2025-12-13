@@ -1,17 +1,18 @@
-# comparador.py
+# normalizar.py
 import pandas as pd
 import unidecode
 from num2words import num2words
 import re
 
 """
-comparador.py - Núcleo de preparação de endereços
+normalizar.py - Núcleo de preparação de endereços
 
 Responsabilidades:
 1. Normalizar logradouros e bairros.
 2. Converter números para texto.
-3. Formatar endereços originais.
-4. Preparar dados para envio ao algoritmo de comparação.
+3. Retira a última letra do setor censitário se tiver.
+4. Formatar endereços originais.
+5. Preparar dados para ser utilizado no algoritmo de comparação.
 """
 
 # -------------------
