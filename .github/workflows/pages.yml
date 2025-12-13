@@ -5,6 +5,7 @@ on:
     branches: ["main"]
     paths:
       - "docs/**"
+      - ".github/workflows/pages.yml"
   workflow_dispatch:
 
 permissions:
@@ -14,17 +15,18 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     defaults:
       run:
         working-directory: docs
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Ruby
@@ -34,17 +36,23 @@ jobs:
           bundler-cache: true
           working-directory: docs
 
-      - name: Build site
-        run: bundle exec jekyll build
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
 
-      - name: Upload artifact
+      - name: Build site with Jekyll
+        run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
+        env:
+          JEKYLL_ENV: production
+
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: docs/_site
+          path: docs/_site/
 
   deploy:
-    needs: build
     runs-on: ubuntu-latest
+    needs: build
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -53,6 +61,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
-        # force rebuild
-
