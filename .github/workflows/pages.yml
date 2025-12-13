@@ -5,6 +5,7 @@ on:
     branches: ["main"]
     paths:
       - "docs/**"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -33,7 +34,7 @@ jobs:
           bundler-cache: true
           working-directory: docs
 
-      - name: Build site with Jekyll
+      - name: Build site
         run: bundle exec jekyll build
 
       - name: Upload artifact
