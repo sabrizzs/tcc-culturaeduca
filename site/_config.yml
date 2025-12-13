@@ -1,6 +1,6 @@
 
-title: "TCC CulturaEduca"
-description: "Projeto de TCC sobre visualização de dados e software livre para geocodificação aplicados à plataforma CulturaEduca."
+title: "Geocodificação de Endereços no Brasil"
+description: "Geocodificação de Endereços Brasileiros com Abordagens Lexicais, Indexadas e Semânticas"
 theme: just-the-docs
 
 # URL e baseurl (Project Page)
@@ -8,7 +8,7 @@ url: "https://sabrizzs.github.io"
 baseurl: "/tcc-culturaeduca"
 
 # Navegação e busca
-nav_enabled: true
+nav_enabled: false
 search_enabled: true
 search:
   heading_level: 2
