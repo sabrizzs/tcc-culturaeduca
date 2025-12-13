@@ -70,10 +70,14 @@ Todas as abordagens operam sobre entradas previamente normalizadas e são avalia
 
 **Monografia**:
 
-[PDF do trabalho final](./monografia.pdf)
+[PDF do trabalho final](/tcc-culturaeduca/docs/monografia.pdf)
 
 **Repositório do código**
 
 A implementação do sistema foi disponibilizada em repositório público, reunindo os principais componentes do trabalho desenvolvido.
 
 [Repositório no GitHub](https://github.com/sabrizzs/tcc-culturaeduca)
+
+**Poster**:
+
+[Poster do trabalho final](/tcc-culturaeduca/docs/poster.pdf))

@@ -4,7 +4,7 @@ on:
   push:
     branches: ["main"]
     paths:
-      - "docs/**"
+      - "site/**"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -23,7 +23,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: docs
+        working-directory: site
 
     steps:
       - name: Checkout
@@ -34,7 +34,7 @@ jobs:
         with:
           ruby-version: '3.3'
           bundler-cache: true
-          working-directory: docs
+          working-directory: site
 
       - name: Setup Pages
         id: pages
@@ -48,7 +48,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: docs/_site/
+          path: site/_site/
 
   deploy:
     runs-on: ubuntu-latest
