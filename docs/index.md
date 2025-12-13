@@ -59,10 +59,9 @@ Todas as abordagens operam sobre entradas previamente normalizadas e são avalia
 |-------------------|-----------------------------------------------------------------------------|
 | Abril – Maio      | Revisão bibliográfica e levantamento das necessidades                        |
 | Maio – Junho      | Escolha e prototipação das abordagens e ferramentas                          |
-| Junho – Agosto    | Desenvolvimento da ferramenta de geocodificação                              |
-| Setembro – Outubro| Avaliação dos métodos e integração à plataforma CulturaEduca                |
-| Outubro           | Testes, análise dos resultados e refinamento                                 |
-| Outubro – Novembro| Redação e finalização do Trabalho de Conclusão de Curso                      |
+| Junho – Outubro    | Desenvolvimento da ferramenta de geocodificação                              |
+| Novembro           | Avaliação dos métodos, testes, análise dos resultados e refinamento                                 |
+| Outubro – Dezembro| Redação e finalização do Trabalho de Conclusão de Curso                      |
 
 ---
 
