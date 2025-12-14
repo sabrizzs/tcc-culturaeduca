@@ -18,7 +18,7 @@ A organização do repositório segue duas áreas principais:
 - **`source/`**  
   Contém o código-fonte do sistema, incluindo scripts para pré-processamento, algoritmos de correspondência e integração com bases de dados.
 
-- **`docs/`**  
+- **`site/docs/`**  
   Diretório dedicado à documentação do projeto, publicado via GitHub Pages. Aqui você encontrará:
   - `index.md`: Introdução ao projeto.
 
