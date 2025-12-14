@@ -30,8 +30,8 @@ A organização do repositório segue duas áreas principais:
  
   - **`site/docs/`**  
   Contém os arquivos em PDF relacionados ao trabalho:
-  - `monografia.pdf`: versão final da monografia.
-  - `poster.pdf`: pôster do trabalho.
+    - `monografia.pdf`: versão final da monografia.
+    - `poster.pdf`: pôster do trabalho.
 
 ---
 
