@@ -5,6 +5,8 @@ Este repositório contém o código-fonte, documentação e materiais relacionad
 
 **Site do projeto:** https://sabrizzs.github.io/tcc-culturaeduca/
 
+[**Monografia**](/site/docs/monografia.pdf)
+
 ---
 
 ## Objetivo do Projeto
