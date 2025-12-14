@@ -24,9 +24,14 @@ A organização do repositório segue duas áreas principais:
 - **`source/`**  
   Contém o código-fonte do sistema, incluindo scripts para pré-processamento, algoritmos de correspondência e integração com bases de dados.
 
-- **`site/docs/`**  
-  Diretório dedicado à documentação do projeto, publicado via GitHub Pages. Aqui você encontrará:
-  - `index.md`: Introdução ao projeto.
+- **`site/`**  
+  Diretório dedicado à documentação do projeto, publicado via GitHub Pages.
+  - `index.md`: página inicial do site do TCC.
+ 
+  - **`site/docs/`**  
+  Contém os arquivos em PDF relacionados ao trabalho:
+  - `monografia.pdf`: versão final da monografia.
+  - `poster.pdf`: pôster do trabalho.
 
 ---
 
