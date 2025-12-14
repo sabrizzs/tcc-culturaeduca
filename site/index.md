@@ -82,4 +82,4 @@ A implementação do sistema foi disponibilizada em repositório público, reuni
 
 **Poster**
 
-[Poster do trabalho final](docs/poster.pdf)
+[Pôster do trabalho final](docs/poster.pdf)
