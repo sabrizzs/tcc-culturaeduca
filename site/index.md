@@ -72,7 +72,7 @@ Todas as abordagens operam sobre entradas previamente normalizadas e são avalia
 
 **Monografia**
 
-[PDF do trabalho final](docs/monografia.pdf)
+[Monografia do trabalho final](docs/monografia.pdf)
 
 **Repositório do código**
 
