@@ -7,7 +7,7 @@ Este repositório contém o código-fonte, documentação e materiais relacionad
 
 [**Monografia**](/site/docs/monografia.pdf)
 
-[**Poster**](/site/docs/poster.pdf)
+[**Pôster**](/site/docs/poster.pdf)
 
 ---
 
