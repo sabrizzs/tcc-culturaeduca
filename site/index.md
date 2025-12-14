@@ -12,12 +12,14 @@ Trabalho de Conclusão de Curso desenvolvido no Instituto de Matemática e Estat
 
 ## Autoria e orientação
 
-**Autoras:**  
+**Trabalho desenvolvido por**  
+
 Sabrina Araújo da Silva — NUSP 12566182
 
 Samantha Miyahira — NUSP 11797261
 
-**Orientadora:**  
+**Sob orientação da**
+
 Profa. Dra. Kelly Rosa Braghetto  
 
 ---
@@ -70,7 +72,7 @@ Todas as abordagens operam sobre entradas previamente normalizadas e são avalia
 
 **Monografia**
 
-[PDF do trabalho final](/tcc-culturaeduca/docs/monografia.pdf)
+[PDF do trabalho final](docs/monografia.pdf)
 
 **Repositório do código**
 
@@ -80,4 +82,4 @@ A implementação do sistema foi disponibilizada em repositório público, reuni
 
 **Poster**
 
-[Poster do trabalho final](/tcc-culturaeduca/docs/poster.pdf)
+[Poster do trabalho final](docs/poster.pdf)
