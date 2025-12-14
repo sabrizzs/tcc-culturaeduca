@@ -5,8 +5,9 @@ import pandas as pd
 import time
 from elasticsearch import Elasticsearch, helpers
 from comparador import formatar_endereco
+import os
 
-ELASTICSEARCH_PW = "HO2Vv2MWa=jTr-EHSmEt"
+ELASTICSEARCH_PW = os.getenv("ELASTIC_PASSWORD", "sua_senha")
 
 def recuperar_es():
     return Elasticsearch(
@@ -156,7 +157,7 @@ def buscar_similares_elasticsearch(
             s.get("original_index"),
         )]
 
-    # Normaliza pelo melhor score e devolve TODOS os hits ---
+    # Normaliza pelo melhor score e devolve todos os hits
     top_score = hits[0].get("_score") or 1.0
     similares = []
     for h in hits:
@@ -212,7 +213,7 @@ def executar_elasticsearch(
         endereco1 = row[colunas_logradouro1]
         bairro1 = row[col_bairro1]
 
-        # Converte NaN em None (permite a leitura em JSON)
+        # Converte NaN em None - permite leitura em json
         if endereco1 is not None:
             endereco1 = str(endereco1).strip()
             if endereco1 == "" or endereco1.lower() == "nan":

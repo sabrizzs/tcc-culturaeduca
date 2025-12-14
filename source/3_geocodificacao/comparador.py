@@ -5,13 +5,13 @@ from num2words import num2words
 import re
 
 """
-comparador.py - Núcleo de preparação de endereços
+comparador.py
 
 Responsabilidades:
-1. Normalizar logradouros e bairros.
-2. Converter números para texto.
-3. Formatar endereços originais.
-4. Preparar dados para envio ao algoritmo de comparação.
+1. Selecionar o algoritmo de comparação de endereços (RapidFuzz, LLM ou Elasticsearch).
+2. Encaminhar os dados e parâmetros para o módulo de comparação correspondente.
+3. Centralizar o fluxo de execução da comparação entre dois DataFrames.
+4. Fornecer utilitários básicos para formatação de endereços.
 """
 
 def formatar_endereco(row: pd.Series, colunas: list) -> str:
@@ -44,7 +44,7 @@ def comparar(df1: pd.DataFrame, df2: pd.DataFrame,
     - colunas_logradouro1/2: listas de colunas que compõem o logradouro
     - col_num1/2: coluna de número do logradouro
     - col_bairro1/2: coluna de bairro
-    - algoritmo: 'rapidfuzz' ou 'llm'
+    - algoritmo: 'rapidfuzz' ou 'llm' ou 'elasticsearch'
     - kwargs: parâmetros específicos do algoritmo
     """
 

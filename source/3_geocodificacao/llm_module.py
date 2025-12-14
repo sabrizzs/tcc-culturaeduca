@@ -13,19 +13,16 @@ from sentence_transformers import SentenceTransformer, util
 from comparador import formatar_endereco
 
 # -------------------
-# Postgres / util
+# Postgres
 # -------------------
 
 def get_pg_connection():
     """
     Abre conexão com o Postgres usando a variável de ambiente PG_DSN.
-
-    Exemplo de PG_DSN:
-        export PG_DSN="dbname=culturaeduca user=usuario password=senha host=localhost port=5432"
     """
     dsn = os.getenv(
         "PG_DSN",
-        "dbname=tcc user=postgres password=password host=localhost port=5432",
+        "dbname=<nome_db> user=<usuario> password=<senha_db> host=localhost port=5432",
     )
     return psycopg2.connect(dsn)
 
@@ -76,12 +73,12 @@ def executar_llm(
     **kwargs: Any,
 ) -> pd.DataFrame:
     """
-    Versão do algoritmo "llm" usando embeddings pré-calculados no Postgres.
+    Algoritmo "llm" usando embeddings do Postgres:
 
     Tabelas usadas:
-        - entrada_diadema_embeddings (e):
+        - entrada_rondonia_embeddings (e):
             cod_unico, logradouro_embedding, numero_embedding, bairro_embedding
-        - cnefe_diadema_embeddings (c):
+        - cnefe_rondonia_embeddings (c):
             cod_unico, logradouro_embedding, numero_embedding, bairro_embedding
 
     Para cada linha de df1 (idx_df1, com cod_unico_endereco_entrada), busca:
@@ -95,51 +92,45 @@ def executar_llm(
         ...
 
     Depois:
-      - converte distâncias em similaridades (0–100),
+      - converte distâncias em similaridades (0-100),
       - monta a lista 'resultados',
       - e ao final faz um pós-processamento para:
           * manter somente os endereços com MAIOR similaridade_final por idx_df1
           * e, dentro de cada idx_df1, manter todas as linhas que tenham
             (endereco_df2, numero_df2, bairro_df2) iguais ao do melhor match.
     """
-    print("entrou no llm")
 
     # Garante que lista de colunas é realmente lista
     if isinstance(colunas_logradouro1_original, str):
         colunas_logradouro1_original = [colunas_logradouro1_original]
-    print("passou 1")
+    
     if isinstance(colunas_logradouro2_original, str):
         colunas_logradouro2_original = [colunas_logradouro2_original]
-    print("passou 2")
-
+    
     # Verificações básicas
     if cod_unico_endereco is None:
         raise ValueError("É necessário informar o nome da coluna 'cod_unico_endereco' em df2.")
-    print("passou 3")
+
     if cod_unico_endereco not in df2.columns:
         raise ValueError(f"Coluna '{cod_unico_endereco}' não encontrada em df2.")
-    print("passou 4")
+
     if cod_unico_endereco_entrada is None:
         raise ValueError("É necessário informar o nome da coluna 'cod_unico_endereco_entrada' em df1.")
 
     # Mapeia cod_unico_endereco -> índice em df2 para lookup rápido
     cod_to_idx2: Dict[str, Any] = {}
-    print("passou 5")
+
     for idx2, cod in df2[cod_unico_endereco].items():
         if pd.isna(cod):
             continue
         cod_to_idx2[str(cod)] = idx2
-    print("passou 6")
 
     resultados: List[Dict[str, Any]] = []
-    print("passou 7")
 
     # Abre conexão única com o banco
     conn = get_pg_connection()
-    print("passou 8")
     cur = conn.cursor()
-    print("passou 9")
-
+    
     try:
         for idx1 in df1.index:
             cod_entrada = df1.loc[idx1, cod_unico_endereco_entrada]
@@ -149,6 +140,7 @@ def executar_llm(
                 continue
 
             # Busca no Postgres os top_n vizinhos (CNEFE) para o embedding da entrada (3 componentes)
+            # ATENCAO COM AS TABELAS - MODIFICAR CONFORME OS DATASETS EXECUTADOS
             cur.execute(
                 """
                 SELECT
@@ -272,9 +264,8 @@ def executar_llm(
 
     # ---------------- PÓS-PROCESSAMENTO ----------------
     # Mantém apenas:
-    #  - o(s) match(es) com MAIOR similaridade_final por idx_df1
-    #  - e, para cada idx_df1, todas as linhas que tenham o MESMO
-    #    (endereco_df2, numero_df2, bairro_df2) do melhor match.
+    #  - os registros com MAIOR similaridade_final por idx_df1
+
     print("----------------RESULTADOS (BRUTOS)-----------------")
     print(resultados[:10])  # só primeiros 10 pra não explodir log
     print("----------------------------------------------------")
