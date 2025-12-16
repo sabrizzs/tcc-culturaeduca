@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>TCC – CulturaEduca</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.6;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 20px;
+      color: #222;
+      background-color: #f5f5f5;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-bottom: 0.2em;
+    }
+
+    h2 {
+      margin-top: 2em;
+      border-bottom: 2px solid #ddd;
+      padding-bottom: 4px;
+    }
+
+    h3 {
+      margin-top: 1.5em;
+    }
+
+    p {
+      margin: 0.8em 0;
+    }
+
+    ul {
+      margin-left: 20px;
+    }
+
+    li {
+      margin: 0.4em 0;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 1em;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .meta {
+      margin-top: 1em;
+      margin-bottom: 2em;
+    }
+
+    .section {
+      margin-top: 2.5em;
+    }
+
+    .links a {
+      display: inline-block;
+      margin: 6px 0;
+    }
+
+    footer {
+      margin-top: 4em;
+      padding-top: 1em;
+      border-top: 1px solid #ccc;
+      font-size: 0.9em;
+      color: #555;
+    }
+
+    .page {
+      background-color: transparent;
+      padding: 0;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+  </style>
+</head>
+<body>
+<div class="page">
+
+<h1>Geocodificação de Endereços Brasileiros com Abordagens Lexicais, Indexadas e Semânticas</h1>
+
+<p>
+Trabalho de Conclusão de Curso desenvolvido no Instituto de Matemática e Estatística da
+Universidade de São Paulo (USP), com foco em geocodificação de endereços brasileiros,
+uso de software livre e análise territorial aplicada à plataforma CulturaEduca.
+</p>
+
+<div class="meta">
+  <p><strong>Autoras</strong><br>
+  Sabrina Araújo da Silva — NUSP 12566182<br>
+  Samantha Miyahira — NUSP 11797261</p>
+
+  <p><strong>Orientadora</strong><br>
+  Profa. Dra. Kelly Rosa Braghetto</p>
+</div>
+
+<div class="section">
+  <h2>Contexto e motivação</h2>
+
+  <p>
+  Endereços no Brasil apresentam grande variação de escrita, com abreviações,
+  grafias distintas e informações incompletas. Essas diferenças dificultam a
+  localização precisa dos endereços no território.
+  </p>
+
+  <p>
+  A geocodificação converte endereços textuais em coordenadas geográficas e é
+  fundamental para plataformas de análise territorial. A plataforma CulturaEduca,
+  por exemplo, utiliza dados georreferenciados para analisar o entorno de escolas,
+  equipamentos culturais e serviços públicos, apoiando análises territoriais e o
+  planejamento de ações e políticas públicas.
+  </p>
+
+  <p>
+  Além das coordenadas, essas análises dependem da associação correta do endereço
+  ao setor censitário, a menor unidade territorial definida pelo IBGE. Vinculações
+  incorretas comprometem diretamente a interpretação espacial dos dados.
+  </p>
+
+  <p>
+  Testes com soluções existentes, como o GeoCodeBR, evidenciaram limitações na
+  identificação adequada dos setores censitários, motivando o desenvolvimento de
+  uma solução própria, baseada em software livre e alinhada ao padrão adotado pelo
+  IBGE.
+  </p>
+</div>
+
+<div class="section">
+  <h2>Objetivo do trabalho</h2>
+
+  <p>
+  O objetivo central deste trabalho é desenvolver um sistema capaz de lidar com a
+  heterogeneidade natural dos endereços brasileiros e produzir uma correspondência
+  consistente entre um endereço textual e o registro mais provável no Cadastro
+  Nacional de Endereços para Fins Estatísticos (CNEFE).
+  </p>
+
+  <p>
+  Para isso, foi implementado um sistema modular que combina diferentes estratégias
+  de correspondência aproximada de strings, permitindo avaliar como cada abordagem
+  se comporta diante de abreviações, variações de grafia e dados incompletos.
+  </p>
+</div>
+
+<div class="section">
+  <h2>Abordagem adotada</h2>
+
+  <ul>
+    <li>
+      <strong>Abordagem lexical:</strong>
+      baseada na biblioteca <em>RapidFuzz</em>, utilizando métricas de similaridade
+      textual e operações sobre tokens.
+    </li>
+    <li>
+      <strong>Abordagem baseada em indexação:</strong>
+      utilizando o <em>Elasticsearch</em>, que combina mecanismos de busca,
+      tokenização e ranqueamento.
+    </li>
+    <li>
+      <strong>Abordagem semântica:</strong>
+      baseada em <em>embeddings</em> gerados por modelos de linguagem, permitindo
+      comparar endereços a partir de seu conteúdo semântico.
+    </li>
+  </ul>
+
+  <p>
+  Todas as abordagens operam sobre entradas previamente normalizadas e são avaliadas
+  a partir de critérios espaciais, com ênfase na correta vinculação dos endereços aos
+  setores censitários.
+  </p>
+</div>
+
+<div class="section">
+  <h2>Cronograma</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Mês</th>
+        <th>Atividades</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Abril – Maio</td>
+        <td>Revisão bibliográfica e levantamento das necessidades</td>
+      </tr>
+      <tr>
+        <td>Maio – Junho</td>
+        <td>Escolha e prototipação das abordagens e ferramentas</td>
+      </tr>
+      <tr>
+        <td>Junho – Outubro</td>
+        <td>Desenvolvimento da ferramenta de geocodificação</td>
+      </tr>
+      <tr>
+        <td>Novembro</td>
+        <td>Avaliação dos métodos, testes, análise dos resultados e refinamento</td>
+      </tr>
+      <tr>
+        <td>Outubro – Dezembro</td>
+        <td>Redação e finalização do Trabalho de Conclusão de Curso</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section links">
+  <h2>Trabalho final</h2>
+
+  <p><strong>Monografia</strong><br>
+  <a href="monografia.pdf" download>Monografia (PDF)</a></p>
+
+  <p><strong>Pôster</strong><br>
+  <a href="poster.pdf" download>Pôster (PDF)</a></p>
+
+  <p><strong>Repositório do código</strong><br>
+  <a href="https://github.com/sabrizzs/tcc-culturaeduca" target="_blank">
+    https://github.com/sabrizzs/tcc-culturaeduca
+  </a></p>
+
+  <p><strong>Página do projeto</strong><br>
+  <a href="https://sabrizzs.github.io/tcc-culturaeduca/" target="_blank">
+    https://sabrizzs.github.io/tcc-culturaeduca/
+  </a></p>
+</div>
+
+<footer>
+  <p>
+  Trabalho desenvolvido no Instituto de Matemática e Estatística da Universidade de São Paulo (USP).
+  </p>
+</footer>
+</div>
+</body>
+</html>
