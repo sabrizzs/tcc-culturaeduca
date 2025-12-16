@@ -28,10 +28,11 @@ A organização do repositório segue duas áreas principais:
   Diretório dedicado à documentação do projeto, publicado via GitHub Pages.
   - `index.md`: página inicial do site do TCC.
  
-  - **`site/docs/`**  
-  Contém os arquivos em PDF relacionados ao trabalho:
+  - **`docs/`**  
+  Contém os arquivos em PDF relacionados ao trabalho e a página em html:
     - `monografia.pdf`: versão final da monografia.
     - `poster.pdf`: pôster do trabalho.
+    - `index.html`: página do trabalho em html.
 
 ---
 
